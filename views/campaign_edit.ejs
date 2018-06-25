@@ -1,0 +1,48 @@
+<form action="/campaign/save" method="post">
+    <div class="form-group col-md-3">
+        <label for="name">Campaign Name</label>
+        <input type="text" class="form-control" id="name" name="name" <% if(add == true){ %> value="" <%}else{ %> value="<%= campaign.name %>" <%}%>>      
+    </div>
+    
+    <% if(add == true){ %>
+        <div class="form-group col-md-3">
+            <label for="is_country_divided">is_country_divided</label>
+            <select class="form-control" id="is_country_divided" name="is_country_divided">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>      
+        </div>
+        
+        <div class="form-group col-md-3">
+            <label for="redir_url">Active</label>
+            <select class="form-control" id="active" name="active">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>      
+        </div>
+    <%}else{%>
+        <input type="hidden" name="id" value="<%= campaign.id %>">
+        <div class="form-group col-md-3">
+            <label for="is_country_divided">is_country_divided</label>
+            <select class="form-control" id="is_country_divided" name="is_country_divided">
+                <option value="0" <% if(campaign.is_country_divided==0){%>selected <% } %>} %> >No</option>
+                <option value="1" <% if(campaign.is_country_divided==1){%>selected <% } %>} %>>Yes</option>
+            </select>   
+            <!-- <input type="text" class="form-control" id="is_country_divided" name="is_country_divided" value="">       -->
+        </div>
+        
+        <div class="form-group col-md-3">
+            <label for="redir_url">Active</label>
+            <select class="form-control" id="active" name="active">
+                <option value="0" <% if(campaign.active==0){%>selected <% } %>} %>>No</option>
+                <option value="1" <% if(campaign.active==1){%>selected <% } %>>Yes</option>
+            </select>   
+            <!-- <input type="text" class="form-control" id="active" name="active" value="<%= campaign.active %>">       -->
+        </div>
+    <%}%>
+    
+    
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" id="campaign_cancel" class="btn btn-warning">Cancel</button>
+</form>

@@ -1,0 +1,74 @@
+
+<form action="/advertisor/save" method="post">
+  <div class="row">
+      <div class="col-xl">
+          <div class="form-group col-md-6">
+              <label for="adv_name">Advertisor Name</label>
+              <input type="text" class="form-control" id="adv_name" required name="adv_name" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.adv_name %>" readonly <%}%> >      
+          </div>
+          
+          <div class="form-group col-md-6">
+              <label for="enabled_time">Expiry Time</label>
+              <input type="number" class="form-control" id="enabled_time" required aria-describedby="enabled_time_addon" name="enabled_time" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.enabled_time %>" readonly Hours <%}%>>
+              <!-- <div class="input-group-append">
+                  <span class="input-group-text" id="enabled_time_addon">Hours</span>
+              </div>       -->
+          </div>
+
+          <div class="form-group col-md-6">
+              <label for="active">Active</label>        
+                <select name="active" id="active" class="form-control" required <% if(add == false){ %> disabled<% } %> >
+                  <option value="0" <% if(advertisor.active==0){%>selected <% } %>} %> >No</option>
+                  <option value="1" <% if(advertisor.active==1){%>selected <% } %>} %>>Yes</option>
+                </select>       
+          </div>
+      </div>
+    
+    <div class="col-xl">
+        <% if(advertisor.is_country_divided == 1){ %>
+          <div class="form-group col-md-6">
+            <label for="country">Country</label>
+            <input type="text" class="form-control" id="country" required name="country" <% if(add == true){ %> value="IN" <%}else{ %> value="<%= advertisor.country %>" readonly <%}%>>   
+          </div>
+        <%}else{%>
+          <input type="hidden" name="country" value="IN">
+        <%}%>
+        <div class="form-group col-md-6">
+            <label for="redirect_id">Redirect URL</label>        
+              <select name="redirect_id" class="form-control" required <% if(add == false){ %> disabled<% } %> >
+                  <option value="">Select Redirect URL</option>
+                  <% for(var i=0; i<redirect_data.length; i++) {%>
+                  <option value="<%= redirect_data[i].redirect_id %>"<% if(add == false && redirect_data[i].redirect_id== advertisor.redirect_id){ %> selected <%}%> ><%= redirect_data[i].redir_url %></option>
+                  <% } %>
+              </select>       
+        </div>
+        
+        <div class="form-group col-md-6">
+            <label for="is_divisor_needed">Divisor Required</label>        
+              <select name="is_divisor_needed" id="is_divisor_needed" required class="form-control" <% if(add == false){ %> disabled<% } %> >
+                <option value="0" <% if(advertisor.is_divisor_needed==0){%>selected <% } %>} %> >No</option>
+                <option value="1" <% if(advertisor.is_divisor_needed==1){%>selected <% } %>} %>>Yes</option>
+              </select>       
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="type">Type</label>        
+              <select name="type" id="type" class="form-control" required <% if(add == false){ %> disabled<% } %> >
+                <option value="1" <% if(advertisor.type==1){%>selected <% } %>} %> >Single</option>
+                <option value="2" <% if(advertisor.type==2){%>selected <% } %>} %>>Multi</option>
+              </select>       
+        </div> 
+    </div>
+  </div>
+    <% if(add == true){ %>
+      <input type="hidden" name="campaign_id" value="<%= advertisor.id %>">
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" id="advertisor_cancel" class="btn btn-warning">Cancel</button>
+    <%}else{%>
+      <input type="hidden" name="advertisor_id" value="<%= advertisor.adv_id %>">
+      <input type="hidden" name="camp_id" value="<%= advertisor.campaign_id %>">
+      <button type="button" class="btn btn-primary" id="edit_adv_button">Edit</button>
+      <button type="submit" class="btn btn-primary" disabled>Submit</button>
+    <%}%>
+    
+</form>

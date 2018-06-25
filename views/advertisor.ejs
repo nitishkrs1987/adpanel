@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include include/head %>
+</head>
+<body>
+  <div class="container">
+      <header>
+          <% include include/header %>
+      </header>
+    <h1>Advertisor Planner for <%= advertisor[0].name %></h1>
+    <p>Text about Advertisors....</p>
+    <% include include/alert %>
+    <div class="row">
+        <% if(advertisor[0].is_country_divided ==1){ %>
+          <div class="col-md-3">
+              <div class="country">
+                  <!-- <label>Select Campaign</label> -->
+                  <select name="country" id="adv_country" class="form-control">
+                    <option value="">Select Country</option>
+                    <% for(var i=0; i<country.length; i++) {%>
+                      <option value="<%= country[i] %>"><%= country[i] %></option>
+                    <% } %>
+                  </select>
+                </div>
+          </div>
+          <div class="col-md-3">
+              <div class="advertisor" id="advertisor">
+                  <!-- <label>Select Campaign</label> -->
+                  <select name="advertisor" id="advertisor_select_by_country" class="form-control">
+                    <option value="">Select Advertisor</option>
+                    <% for(var i=0; i<advertisor.length; i++) {%>
+                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
+                     <% } %>
+                  </select>
+                </div>
+          </div>
+        <% }else{ %>
+          <div class="col-md-6">
+              <div class="advertisor">
+                  <!-- <label>Select Campaign</label> -->
+                  <select name="advertisor" id="advertisor" class="form-control">
+                    <option value="">Select Advertisor</option>
+                    <% for(var i=0; i<advertisor.length; i++) {%>
+                    <option value="<%= advertisor[i].adv_id %>"><%= advertisor[i].adv_name %></option>
+                    <% } %>
+                  </select>
+                </div>
+          </div>
+        <% } %>
+    </div> 
+    <div class="row">
+        <div class="col-md-12 adv_column" style="display:none">
+          <!-- <h2>Advertisor Details</h2> -->
+          <a class="btn btn-primary" style="margin-top:20px;margin-bottom:20px;" data-toggle="collapse" href="#adv_collapse" role="button" aria-expanded="false" aria-controls="adv_collapse">
+              Advertisor Details
+            </a>
+          <div class="collapse" id="adv_collapse">
+            <div id="advertisor_details"></div>
+          </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-md-12" style="display:none">
+          <h2>Affiliate Details</h2>
+          <div id="affiliate"></div>
+        </div>
+    </div> 
+  </div>
+
+  <footer>
+      <% include include/footer %>
+  </footer>
+</body>
+</html>

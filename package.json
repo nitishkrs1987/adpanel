@@ -1,0 +1,28 @@
+{
+  "name": "panel",
+  "version": "0.1.0",
+  "description": "Ad Admin Panel",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "Nitish Kumar/nitish@manyainternational.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "connect-ensure-login": "^0.1.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^6.0.0",
+    "ejs": "^2.5.8",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.2.0",
+    "moment": "^2.18.1",
+    "mongodb": "^3.0.5",
+    "node-mysql": "^0.4.2",
+    "passport": "^0.2.2",
+    "passport-local": "^1.0.0",
+    "request": "^2.74.0"
+  }
+}

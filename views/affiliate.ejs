@@ -1,0 +1,64 @@
+
+<form action="/affiliate/save" method="post">
+  <div class="form-group">
+    
+         
+      <% if(affiliate.length > 0) {%>
+        
+        <% for(var i=0; i<affiliate.length; i++) { 
+          var base_url = affiliate[i].link.split("?url=");
+          %>
+          <div class="row">  
+            <div class="col-xl-10">
+              <% if(i == 0){ %>
+                <label for="link1 mb3">Links</label>
+              <% } %>
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
+                    <!-- <span class="input-group-text" id="basic-addon3"><%= base_url[0] %>?url=</span> -->
+                  </div>
+                <input type="url" name="links[]" required aria-describedby="basic-addon3" class="form-control" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
+              </div>          
+            </div>
+            <div class="col-xl-2">
+                <% if(i == 0){ %>
+                  <label for="link1">Divisor</label>
+                <% } %>
+                <div class="input-group">              
+                  <input type="number" name="divisor[]" class="form-control" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                  <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>
+                </div>
+            </div>       
+          </div>       
+        <% } %>
+      <% }else{ %>
+      <div class="row">  
+        <div class="col-xl-11">
+          <label for="link1 mb3">Links</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
+            </div>
+            <input type="url" name="links[]" required aria-describedby="basic-addon3" class="form-control" id="link1" value="">
+          </div>
+        </div>
+        <div class="col-xl-1">
+            <label for="link1 mb3">Divisor</label>
+            <div class="input-group mb-3">              
+              <input type="number" name="divisor[]" class="form-control" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+            </div>
+        </div>  
+      </div> 
+      <% } %>
+    
+ 
+      <% if(is_divisor_needed == 1 || adv_type==2) {%>
+        <button class="btn btn-info" id="add_link"><i class="fas fa-plus"></i></button>
+      <% } %>
+      <input type="hidden" name="adv_id" value="<%= adv_id %>">
+      <input type="hidden" name="redir_url" value="<%= redir_url %>">
+      <input type="hidden" name="campaign_id" value="<%= campaign_id %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>

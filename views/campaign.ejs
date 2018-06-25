@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<% include include/head %>
+</head>
+<body>
+  <div class="container">
+      <header>
+          <% include include/header %>
+      </header>
+    <h1>Campaigns</h1>
+    <% include include/alert %>
+    <div class="campaign" id="campaign">      
+      <table class="table table-hover table-bordered">
+        <tr><th>Campaign</th><th>Country division</th><th>Active</th><th>Operation</th></tr>
+          <% for(var i=0; i<campaign.length; i++) {%>
+            <tr>
+                <td><%= campaign[i].name %></td>
+                <td><% if(campaign[i].is_country_divided == 0){ %> No<% }else{ %>Yes <%} %></td>
+                <td><% if(campaign[i].active == 0) { %> No<% }else{ %>Yes <%} %></td>
+                <td>
+                  <button id="<%= campaign[i].id %>" class="btn edit_campaign btn-danger">Edit</button>
+                  <% if(campaign[i].active == 1) { %>
+                    <a href="/advertisor/<%= campaign[i].id %>"><button class="btn btn-danger">View Advertisers</button></a>  
+                    <button id="<%= campaign[i].id %>" class="btn add_advertisor btn-danger">Add Advertisers</button>  
+                    <a href="/generate-file/<%= campaign[i].id %>"><button class="btn btn-danger">Generate JS File</button></a>  
+                  <%} %>
+                </td>
+            </tr>
+          <% } %>
+      </table>
+
+    </div>
+    <button class="btn add_campaign btn-danger"><i class="fas fa-plus"></i> Add Campaign</button>  
+    <div class="campaign_detail" id="campaign_detail">
+
+    </div>
+  </div>
+
+  <footer>
+      <% include include/footer %>
+  </footer>
+</body>
+</html>
+<script>
+  // jQuery(document).ready(function(){
+  //   jQuery("#campaign").change(function(){
+  //     var $option = $(this).find('option:selected');
+  //     // alert($option.val());
+  //     window.location.href = "http://localhost:3000/advertisor/"+$option.val();
+  //   });
+  // });
+</script>

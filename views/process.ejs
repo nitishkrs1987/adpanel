@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mongodb Task Manager</title>
+  <link href="css/bootstrap.css" media="screen" rel="stylesheet" type="text/css">
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+  function load()
+  {
+  setTimeout("window.open(self.location, '_self');", 5000);
+  }
+  </script>
+</head>
+<body onload="load()">
+  <h1>Mongodb Task Manager</h1>
+
+  <table border="1" class="table">
+    <tr><th>Operation ID</th><th>Seconds Running</th><th>Operation</th><th>Collection</th><th>Query</th></tr>
+  <% for(var i=0; i<process.length; i++) {%>
+    <tr>
+    <td><span><a href="#" class="kill" title="Kill Process" id="<%= process[i].opid %>"> <%= process[i].opid %> </a> </span></td>
+    <td style="<% if(process[i].secs_running > 1000){ %>background:red <% } %>" ><span><%= process[i].secs_running %></span></td>
+    <td><span><%= process[i].op %></span></td>
+    <!--<td><span><%= process[i].ns %></span></td>-->
+    <% if(process[i].op == "getmore"){ %>
+        <td><span><%= process[i].originatingCommand.find %></span></td>
+    <% }else if(process[i].op == "query"){ %>
+        <td><span><%= process[i].query.find %></span></td>
+    <% }else if(process[i].op == "update"){ %>
+          <td><span><%= process[i].update.find %></span></td>
+    <% }else{ %>
+        <td><span><%- JSON.stringify(process[i].query) %></span></td>
+    <% } %>
+
+    <% if(process[i].op == "getmore"){ %>
+        <td><span><%- JSON.stringify(process[i].originatingCommand.filter) %></span></td>
+    <% }else{ %>
+        <td><span><%- JSON.stringify(process[i].query.filter) %></span></td>
+    <% } %>
+
+  </tr>
+  <% } %>
+</table>
+
+
+</body>
+</html>
+
+
+<script>
+jQuery(document).ready(function(){
+  jQuery(".kill").click(function(){
+    if (confirm('Are you sure to kill this process?')) {
+        // alert($(this).attr("id"));
+        var opid=$(this).attr("id");
+
+    }
+  });
+});
+</script>
