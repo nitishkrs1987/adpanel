@@ -2,3 +2,4 @@
 .htaccess
 robots.txt
 output
+.DS_Store

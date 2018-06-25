@@ -7,13 +7,13 @@ jQuery(document).ready(function(){
       var $option = $(this).find('option:selected');
       // alert($option.val());
       // window.location.href = "http://localhost:3000/advertisor/"+$option.val();
-      jQuery.get("http://localhost:3000/affiliate/"+$option.val(),function(resp){
+      jQuery.get("/affiliate/"+$option.val(),function(resp){
         // console.log(resp);
         jQuery("#affiliate").html(resp);
         jQuery("#affiliate").parent().show();
       });
       
-      jQuery.get("http://localhost:3000/advertisor_detail/"+$option.val(),function(resp){
+      jQuery.get("/advertisor_detail/"+$option.val(),function(resp){
         // console.log(resp);
         jQuery("#advertisor_details").html(resp);
         jQuery(".adv_column").show();
@@ -41,21 +41,21 @@ jQuery(document).ready(function(){
     });
     /***************** Campaign ************************/
     jQuery(".edit_campaign").click(function(){
-      jQuery.get("http://localhost:3000/campaign/edit/"+$(this).attr("id"),function(resp){
+      jQuery.get("/campaign/edit/"+$(this).attr("id"),function(resp){
         // console.log(resp);
         jQuery("#campaign_detail").html(resp);
       });
     });
     
     jQuery(".add_campaign").click(function(){
-      jQuery.get("http://localhost:3000/campaign/add",function(resp){
+      jQuery.get("/campaign/add",function(resp){
         // console.log(resp);
         jQuery("#campaign_detail").html(resp);
       });
     });
 
     jQuery(".add_advertisor").click(function(){
-      jQuery.get("http://localhost:3000/advertisor/add/"+$(this).attr("id"),function(resp){
+      jQuery.get("/advertisor/add/"+$(this).attr("id"),function(resp){
         // console.log(resp);
         jQuery("#campaign_detail").html(resp);
       });
@@ -78,7 +78,7 @@ jQuery(document).ready(function(){
       if (window.confirm("Are you sure?")) {    
         var remove_link = jQuery(this);
         var affiliate_id = remove_link.attr("rel");
-        jQuery.get("http://localhost:3000/affiliate/remove/"+affiliate_id,function(resp){
+        jQuery.get("/affiliate/remove/"+affiliate_id,function(resp){
           remove_link.parent().parent().parent().remove();
         });
       }
