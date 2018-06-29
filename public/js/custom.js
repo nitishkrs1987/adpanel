@@ -2,17 +2,27 @@ jQuery(document).ready(function(){
   $(".alert").delay(2000).slideUp(500, function() {
       $(this).alert('close');
   });
+
+  
+  jQuery('body').on("click","#download_files",function(){
+    jQuery.get("/files_in_output",function(files){
+      files = JSON.parse(files);
+      console.log(files);
+      multiDownload(files);
+    });
+    // files = new Array("/output/promo_img_in.js");
+    // console.log(files);
+    // multiDownload(files);
+  });
   /***************** Advertisor ************************/
     jQuery("#advertisor").change(function(){
       var $option = $(this).find('option:selected');
-      // alert($option.val());
-      // window.location.href = "http://localhost:3000/advertisor/"+$option.val();
       jQuery.get("/affiliate/"+$option.val(),function(resp){
         // console.log(resp);
         jQuery("#affiliate").html(resp);
         jQuery("#affiliate").parent().show();
       });
-      
+
       jQuery.get("/advertisor_detail/"+$option.val(),function(resp){
         // console.log(resp);
         jQuery("#advertisor_details").html(resp);
@@ -20,22 +30,22 @@ jQuery(document).ready(function(){
       });
     });
     jQuery("body").on('click',"#edit_adv_button",function(){
-      $("input").prop("readonly", false); 
-      $("button").prop("disabled", false); 
-      $("select").prop("disabled", false); 
-      $(this).prop("disabled", true); 
+      $("input").prop("readonly", false);
+      $("button").prop("disabled", false);
+      $("select").prop("disabled", false);
+      $(this).prop("disabled", true);
     })
     jQuery('body').on("click","#advertisor_cancel",function(){
       jQuery("#campaign_detail").text("");
     });
-    jQuery('body').on("change","#adv_country",function(){  
+    jQuery('body').on("change","#adv_country",function(){
       var $country = $(this).find('option:selected');
       // alert($country.val());
       $("div#advertisor select#advertisor_select_by_country option").each(function(){
-        if($(this).attr("rel") != $country.val() && $(this).val()!=""){ 
+        if($(this).attr("rel") != $country.val() && $(this).val()!=""){
             $(this).attr("disabled","disabled");
         }else{
-          $(this).removeAttr("disabled");    
+          $(this).removeAttr("disabled");
         }
       });
     });
@@ -46,7 +56,7 @@ jQuery(document).ready(function(){
         jQuery("#campaign_detail").html(resp);
       });
     });
-    
+
     jQuery(".add_campaign").click(function(){
       jQuery.get("/campaign/add",function(resp){
         // console.log(resp);
@@ -65,7 +75,7 @@ jQuery(document).ready(function(){
     });
 
     /************** Affiliate ************************/
-    jQuery('body').on("click","#add_link",function(){      
+    jQuery('body').on("click","#add_link",function(){
       var newrow = jQuery(this).prev().clone();
       newrow.find("input").attr("id",(parseInt(newrow.find("input").attr("id"))+1));
       newrow.find("input[type='text']").attr("value","");
@@ -74,8 +84,8 @@ jQuery(document).ready(function(){
       jQuery(this).prev().after(newrow);
       return false;
     });
-    jQuery('body').on("click",".remove_link",function(){  
-      if (window.confirm("Are you sure?")) {    
+    jQuery('body').on("click",".remove_link",function(){
+      if (window.confirm("Are you sure?")) {
         var remove_link = jQuery(this);
         var affiliate_id = remove_link.attr("rel");
         jQuery.get("/affiliate/remove/"+affiliate_id,function(resp){
@@ -91,6 +101,6 @@ function getText(num)
 {
   if(num == 0)
     return "No";
-  
+
   return "Yes";
 }

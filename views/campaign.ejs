@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <% include include/head %>
+<script src="/js/browser.js"></script>
 </head>
 <body>
   <div class="container">
@@ -23,7 +24,11 @@
                   <% if(campaign[i].active == 1) { %>
                     <a href="/advertisor/<%= campaign[i].id %>"><button class="btn btn-danger">View Advertisers</button></a>  
                     <button id="<%= campaign[i].id %>" class="btn add_advertisor btn-danger">Add Advertisers</button>  
-                    <a href="/generate-file/<%= campaign[i].id %>"><button class="btn btn-danger">Generate JS File</button></a>  
+                    <!-- <a href="/frontjs/<%= campaign[i].id %>"><button class="btn btn-danger">View Font JS</button></a>   -->
+                    <a href="/generate-file/<%= campaign[i].id %>"><button class="btn btn-danger">Generate Backend JS File</button></a>
+                    <% if(campaign[i].is_country_divided == 1){ %>
+                      <button class="btn btn-danger" id="download_files">Download JS File</button>
+                    <%} %>
                   <%} %>
                 </td>
             </tr>
@@ -42,12 +47,3 @@
   </footer>
 </body>
 </html>
-<script>
-  // jQuery(document).ready(function(){
-  //   jQuery("#campaign").change(function(){
-  //     var $option = $(this).find('option:selected');
-  //     // alert($option.val());
-  //     window.location.href = "http://localhost:3000/advertisor/"+$option.val();
-  //   });
-  // });
-</script>

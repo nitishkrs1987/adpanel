@@ -1,13 +1,4 @@
 const mysql      = require('mysql');
-
-// var pool      =    mysql.createPool({
-//   connectionLimit : 100, //important
-//   host     : process.env.MYSQL_HOST,
-//   user     : process.env.MYSQL_USER,
-//   password : process.env.MYSQL_PASSWORD,
-//   database : process.env.MYSQL_DATABASE,
-//   debug    : process.env.MYSQL_DEBUG
-// });
 var pool = mysql.createConnection({
   host     : process.env.MYSQL_HOST,
   user     : process.env.MYSQL_USER,
@@ -16,7 +7,6 @@ var pool = mysql.createConnection({
 });
 exports.index = function (req,res) {
   pool.query("select * from campaign",function(err,rows){
-       // connection.release();
        if(!err) {
          // console.log(rows);         
          res.render('campaign',{campaign: rows,req:req,res:res});
@@ -25,7 +15,6 @@ exports.index = function (req,res) {
 }
 exports.edit = function (req,res) {
   pool.query("select * from campaign where id="+req.params.campaign_id,function(err,rows){
-       // connection.release();
        if(!err) {
          res.render('campaign_edit',{campaign: rows[0],add: false});
        }
@@ -33,12 +22,6 @@ exports.edit = function (req,res) {
 }
 exports.add = function (req,res) {
   res.render('campaign_edit',{add: true});
-  // pool.query("select * from campaign where id="+req.params.campaign_id,function(err,rows){
-  //      // connection.release();
-  //      if(!err) {
-  //        res.render('campaign_edit',{campaign: rows[0]});
-  //      }
-  //  });
 }
 exports.save = function (req,res) {
   // console.log(req.body);

@@ -1,5 +1,7 @@
 const mysql      = require('mysql');
 const fs = require('fs');
+const path = require('path');
+const directory = 'output';
 class Database {
   constructor( config ) {
       this.connection = mysql.createConnection( {
@@ -28,6 +30,47 @@ class Database {
       } );
   }
 }
+function deleteFiles(){
+  // console.log(directory);
+  return new Promise(function (fulfill, reject){
+    fs.readdir(directory, (err, files) => {
+      if (err) reject(err);
+      filecount=1;
+      for (const file of files) {
+        if(file != ".DS_Store")
+        {
+          var stats = fs.statSync(path.join(directory, file));
+          // console.log(files.length);
+          if(stats.isFile())
+          {
+            fs.unlink(path.join(directory, file), err => {
+              if (err) reject(err);
+              else fulfill(1);
+            });
+          }
+        }
+        
+        if(filecount == files.length)
+        {
+          fulfill(1);
+        }
+        filecount++;
+      }
+    });
+  });
+}
+
+function writeFile(filename,content){
+  return new Promise(function (fulfill, reject){
+   
+      fs.writeFile(filename, content, function(err) {
+        if (err) reject(err);
+        else fulfill(1);
+      });
+   
+  });
+}
+
 exports.index = function (req,res) {
   // console.log(req.params.campaign_id);
   database = new Database();
@@ -35,46 +78,56 @@ exports.index = function (req,res) {
   database.query( 'select * from campaign where id='+req.params.campaign_id ).then( rows => {
     if(rows[0].is_country_divided == 0)
         {
-          var filename = "output/promo_img.js";
+          var filename = directory+"/promo_img.js";
           unicountry(rows[0].id,function(resp){
-            // res.render("generate",{generate:resp});
-            fs.unlink(filename, function (err) {
-              fs.writeFile(filename, resp, function(err) {
-                if(err) {
-                    return console.log(err);
+            return new Promise(function (fulfill, reject){
+              writeFile(filename, resp).then(function (fname){
+                try {
+                  fulfill(res.download(filename));
+                  
+                } catch (ex) {
+                  reject(ex);
                 }
-                res.download(filename);
-                // res.render("generate",{generate:resp});
-              }); 
+              }, reject);
             });
           }); 
         }else{     
-          var filename = "output/promo_img_"; 
-          database.query("select country from advertisor where active=1 and campaign_id="+rows[0].id+" group by country").then( country => {
-            for(i=0; i <country.length;i++)
-            {
-              multicountry(rows[0].id,country[i].country.toLowerCase(),function(resp){
-                // console.log(resp);
-                for (var country in resp) {
-                  // console.log(country);
-                   fs.unlink(filename+country+".js", function (err) {
-                    fs.writeFile(filename+country+".js", resp[country], function(err) {
-                      if(err) {
-                          return console.log(err);
-                      }
-                      res.download(filename+country+".js");
-                      // res.render("generate",{generate:resp});
-                    }); 
-                  });     
-              }
-                // res.render("generate",{generate:resp});    
+          var filename = directory+"/promo_img_"; 
+         
+          database.query("select country from advertisor where active=1 and campaign_id="+rows[0].id+" group by country").then( rows_country => {
+            country = rows_country;
+          }).then( () => {
+            // console.log(country);
+            deleteFiles().then(function (dd){  
+              for(i=0; i <country.length;i++)
+              {
+                console.log(country[i].country.toLowerCase());
+                multicountry(rows[0].id,country[i].country.toLowerCase(),function(resp){
+                  // console.log(resp);
+                  for (var country1 in resp) {
+                    // console.log(country1);
+                    fname = filename+country1+".js";
                   
-              });
-            }
-             
+                    return new Promise(function (fulfill, reject){
+                      writeFile(fname, resp[country1]).then(function (resp_no_use){
+                        try {
+                          req.flash('success', 'File(s) generated successfully Successfully.');
+                          fulfill(res.redirect('/campaign'));
+                        
+                        } catch (ex) {
+                          reject(ex);
+                        }
+                      }, reject);
+                    });
+                  
+                  }
+
+                });
+              }
+            });
           });
        
-        }
+      }
   });
 }
 
@@ -95,7 +148,7 @@ function multicountry(campaign_id,country,callback)
     if(ids != "")
     {
       ids = ids.slice(0, -1);
-      console.log("78-"+ids);
+      // console.log("78-"+ids);
       return database.query( "select * from affiliate where adv_id in ("+ids+") order by divisor desc" );
     }
   }).then( rows => {
@@ -211,4 +264,31 @@ function generate_js(advertisor,affiliate,country,callback ){
       }else{
         callback(generate);
       }      
+}
+exports.files_in_output = function(req,res){
+  var filename = [];
+  // return new Promise(function (fulfill, reject){
+    fs.readdir(directory, (err, files) => {
+      if (err) reject(err);
+      filecount=1;
+      for (const file of files) {
+        if(file != ".DS_Store")
+        {
+          var stats = fs.statSync(path.join(directory, file));
+          console.log(files.length);
+          if(stats.isFile())
+          {
+            filename.push(directory+"/"+file);
+          }
+        if(filecount == files.length)
+        {
+          // console.log(filename);
+          res.end(JSON.stringify(filename));
+        }
+      }
+        filecount++;
+      
+      }
+    });
+  // });
 }
