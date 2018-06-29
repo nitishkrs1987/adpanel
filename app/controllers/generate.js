@@ -93,7 +93,7 @@ exports.index = function (req,res) {
           }); 
         }else{     
           var filename = directory+"/promo_img_"; 
-         
+         var promises = [];
           database.query("select country from advertisor where active=1 and campaign_id="+rows[0].id+" group by country").then( rows_country => {
             country = rows_country;
           }).then( () => {
@@ -101,30 +101,34 @@ exports.index = function (req,res) {
             deleteFiles().then(function (dd){  
               for(i=0; i <country.length;i++)
               {
-                console.log(country[i].country.toLowerCase());
-                multicountry(rows[0].id,country[i].country.toLowerCase(),function(resp){
-                  // console.log(resp);
-                  for (var country1 in resp) {
+                // console.log(country[i].country.toLowerCase());
+                // var result = Promise.all();
+                promises[i] = new Promise(function (fulfill, reject){
+                  multicountry(rows[0].id,country[i].country.toLowerCase()).then(function(resp){
+                    // console.log(resp);
+                    var country1 = "";
+                    for (var cc in resp) {
+                      country1 = cc;
+                    }
                     // console.log(country1);
                     fname = filename+country1+".js";
-                  
-                    return new Promise(function (fulfill, reject){
-                      writeFile(fname, resp[country1]).then(function (resp_no_use){
-                        try {
-                          req.flash('success', 'File(s) generated successfully Successfully.');
-                          fulfill(res.redirect('/campaign'));
-                        
-                        } catch (ex) {
-                          reject(ex);
-                        }
-                      }, reject);
-                    });
-                  
-                  }
+                    fs.writeFile(fname, resp[country1], function(err) {
+                      if (err) reject(err);
+                      else fulfill(1);
+                    });        
+                    
 
-                });
-              }
-            });
+                  }).catch((error) => { console.log(error); }); //End of multi-country call
+                }); 
+
+              } //End of for loop
+            }); //End of deleteFiles call
+          }); //End of database query
+
+          Promise.all(promises).then(function(values) {
+            // console.log("142");
+            req.flash('success', 'File(s) generated successfully Successfully.');
+            res.redirect('/campaign')
           });
        
       }
@@ -133,43 +137,47 @@ exports.index = function (req,res) {
 
 function multicountry(campaign_id,country,callback)
 {
-  database = new Database();
-  var advertisor = {};
-  var affiliate = {};
-  
-  database.query("select * from advertisor where active=1 and country like '"+country+"' and campaign_id="+campaign_id).then( rows => {
-    // advertisor = rows;
-    advertisor[country] = rows;    
-    var ids= "";
-    for(i=0; i <advertisor[country].length;i++)
-    {
-     ids += advertisor[country][i].adv_id+",";
-    }    
-    if(ids != "")
-    {
-      ids = ids.slice(0, -1);
-      // console.log("78-"+ids);
-      return database.query( "select * from affiliate where adv_id in ("+ids+") order by divisor desc" );
-    }
-  }).then( rows => {
-    // affiliate = rows;
-    affiliate[country] = rows;
-    // return database.close();
-  }, err => {
-    return database.close().then( () => { throw err; } )
-} )
-  .then( () => {
-    // console.log("country-"+country);
-    // console.log("advertisor-"+JSON.stringify(advertisor));
-    // console.log("affiliate-"+JSON.stringify(affiliate));
-    generate_js(advertisor[country],affiliate[country],country,function(resp){
-     callback(resp);
-      // console.log("resp-"+resp);
-    });
-  } ).catch( err => {
-    // handle the error
-    console.log(err);
-  } );  
+  return new Promise(function (fulfill, reject){
+    database = new Database();
+    var advertisor = {};
+    var affiliate = {};
+    
+    database.query("select * from advertisor where active=1 and country like '"+country+"' and campaign_id="+campaign_id).then( rows => {
+      // advertisor = rows;
+      advertisor[country] = rows;    
+      var ids= "";
+      for(i=0; i <advertisor[country].length;i++)
+      {
+      ids += advertisor[country][i].adv_id+",";
+      }    
+      if(ids != "")
+      {
+        ids = ids.slice(0, -1);
+        // console.log("78-"+ids);
+        return database.query( "select * from affiliate where adv_id in ("+ids+") order by divisor desc" );
+      }
+    }).then( rows => {
+      // affiliate = rows;
+      affiliate[country] = rows;
+      // return database.close();
+    }, err => {
+      return database.close().then( () => { throw err; } )
+  } )
+    .then( () => {
+      // console.log("country-"+country);
+      // console.log("advertisor-"+JSON.stringify(advertisor));
+      // console.log("affiliate-"+JSON.stringify(affiliate));
+      generate_js(advertisor[country],affiliate[country],country,function(resp){
+        fulfill(resp);
+      //  callback(resp);
+        // console.log("resp-"+resp);
+      });
+    } ).catch( err => {
+      reject(err);
+      // console.log(err);
+    } );  
+
+});
 }
 
 
