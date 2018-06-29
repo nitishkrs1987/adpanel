@@ -1,7 +1,7 @@
 var campaign_handler = require('../controllers/campaign')
 var advertisor_handler = require('../controllers/advertisor')
 var affiliate_handler = require('../controllers/affiliate')
-var frontjs_handler = require('../controllers/frontjs')
+// var frontjs_handler = require('../controllers/frontjs')
 var generate_handler = require('../controllers/generate')
 var exp_handler = require('../controllers/exp')
 var passport = require('passport');
