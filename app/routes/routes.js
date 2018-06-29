@@ -67,9 +67,9 @@ module.exports = function (app) {
     app.get('/files_in_output',generate_handler.files_in_output);
 
     // app.get('/frontjs/:campaign_id',frontjs_handler.index);
-    app.get('/exp',exp_handler.index);
-    app.get('/exp/download',exp_handler.download);
-    app.post('/exp/save',exp_handler.save);
+    // app.get('/exp',exp_handler.index);
+    // app.get('/exp/download',exp_handler.download);
+    // app.post('/exp/save',exp_handler.save);
 
     // var cpUpload = upload.fields([{ name: 'campaign_id', maxCount: 1 }, { name: 'link', maxCount: 1 },{ name: 'size', maxCount: 1 },{ name: 'image', maxCount: 1 }, { name: 'ga', maxCount: 1 }]);
     // app.post('/frontjs/save',cpUpload,frontjs_handler.save);
