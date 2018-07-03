@@ -8,8 +8,18 @@ var pool = mysql.createConnection({
   multipleStatements: true
 });
 
-var comp_vendor = require('../models/product_model.js');
-
+// var comp_vendor = require('../models/product_model.js');
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.ASEAN_MongoDB);
+var plinkSchema = new mongoose.Schema({
+  country_code: String,
+  product_url: String,
+  enabled: Number,
+  track_stock: Number,
+  vendor: Number,
+  last_update: Date
+});
+var comp_vendor = mongoose.model('comp_vendor', plinkSchema,"comp_vendor");
 exports.index = function (req,res) {
   if(typeof(req.params.adv_id) != "undefined")
   {
@@ -77,12 +87,12 @@ exports.update_plinks = function(req,res){
   {
     getRedirectUrl(req.params.adv_id,function(redir_url){
       console.log(redir_url);
-      if(redir_url.country.toLowerCase() != "in")
-      {
-        var mongoose = require("../lib/mongo_conn_asean.js");
-      } else{
-        var mongoose = require("../lib/mongo_conn_india.js");
-      }
+      // if(redir_url.country.toLowerCase() != "in")
+      // {
+      //   var mongoose = require("../lib/mongo_conn_asean.js");
+      // } else{
+      //   var mongoose = require("../lib/mongo_conn_india.js");
+      // }
       comp_vendor.find({enabled: 1,track_stock: 1,vendor: redir_url.vendor,country_code: redir_url.country.toLowerCase()},'product_url').sort({'last_update': -1}).limit(parseInt(process.env.PRODUCT_LIMIT)).exec(function(err, links) {
         if(err) {console.log("Error-"+err);}
         else{
