@@ -76,6 +76,7 @@ exports.update_plinks = function(req,res){
   if(typeof(req.params.adv_id) != "undefined")
   {
     getRedirectUrl(req.params.adv_id,function(redir_url){
+      console.log(redir_url);
       if(redir_url.country.toLowerCase() != "in")
       {
         var mongoose = require("../lib/mongo_conn_asean.js");
@@ -85,6 +86,7 @@ exports.update_plinks = function(req,res){
       comp_vendor.find({enabled: 1,track_stock: 1,vendor: redir_url.vendor,country_code: redir_url.country.toLowerCase()},'product_url').sort({'last_update': -1}).limit(parseInt(process.env.PRODUCT_LIMIT)).exec(function(err, links) {
         if(err) {console.log("Error-"+err);}
         else{
+          console.log(links);
             var insert_sql = "";
             for(var i=0;i<links.length;i++)
             {
