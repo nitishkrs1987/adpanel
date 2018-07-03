@@ -87,9 +87,9 @@ jQuery(document).ready(function(){
       jQuery("#campaign_detail").text("");
     });
 
-    jQuery('body').on("click",".gen_download_files",function(){
-      jQuery(".download_files").attr("disabled","disabled");
-    });
+    // jQuery('body').on("click",".gen_download_files",function(){
+    //   jQuery(".download_files").attr("disabled","disabled");
+    // });
     jQuery('body').on("click",".download_files",function(){
       jQuery.get("/files_in_output",function(files){
         files = JSON.parse(files);

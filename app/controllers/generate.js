@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const directory = 'output';
 const Database = require('../lib/conn.js');
-const helper = require('../lib/helper.js');
-const generate_helper = require('../lib/generate_helper.js');
+var helper = require('../lib/helper.js');
+var generate_helper = require('../lib/generate_helper.js');
 
 
 exports.index = function (req,res) {
