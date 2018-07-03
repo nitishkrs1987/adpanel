@@ -59,7 +59,7 @@ exports.detail = function(req, res){
 exports.add = function(req, res){
   if(typeof(req.params.campaign_id) != "undefined")
   {
-    pool.query("select id, name, country, is_country_divided, type as camp_type, active from campaign where id="+req.params.campaign_id,function(err,campaign_detail){
+    pool.query("select id, name, country as camp_country, is_country_divided, type as camp_type, active from campaign where id="+req.params.campaign_id,function(err,campaign_detail){
       pool.query("select * from redirect_wrapper",function(err,redirect_data){
         if(!err) {
           res.render('advertisor_detail',{advertisor: campaign_detail[0],add: true,redirect_data:redirect_data});
