@@ -2,14 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const directory = 'output';
 const Database = require('../lib/conn.js');
-var helper = require('../lib/helper.js');
-var generate_helper = require('../lib/generate_helper.js');
+const helpers = require('../lib/helper.js');
+const generate_helpers = require('../lib/generate_helper.js');
 
 
 exports.index = function (req,res) {
   // console.log(req.params.campaign_id);
   database = new Database();
-  helper = new helper();
+  helper = new helpers();
   
   database.query( 'select * from campaign where id='+req.params.campaign_id ).then( rows => {
     if(rows[0].is_country_divided == 0)
@@ -78,7 +78,7 @@ function multicountry(campaign_id,camp_type,country,callback)
   
   return new Promise(function (fulfill, reject){
     database = new Database();
-    gen_helper = new generate_helper();
+    gen_helper = new generate_helpers();
     var advertisor = {};
     var affiliate = {};
     
@@ -129,7 +129,7 @@ function multicountry(campaign_id,camp_type,country,callback)
 function unicountry(campaign_id,camp_type,callback)
 {
   database = new Database();
-  gen_helper = new generate_helper();
+  gen_helper = new generate_helpers();
   var generate = "var a = Math.round(new Date().getTime() / 1000);";
   database.query("select * from advertisor where active=1 and campaign_id="+campaign_id).then( rows => {
     advertisor = rows;
