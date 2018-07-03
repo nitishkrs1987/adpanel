@@ -46,7 +46,7 @@ exports.index = function (req,res) {
 exports.detail = function(req, res){
   if(typeof(req.params.adv_id) != "undefined")
   {
-     pool.query("select A.*,C.is_country_divided,C.country as camp_country from advertisor as A, campaign C where A.campaign_id=C.id  and A.adv_id="+req.params.adv_id,function(err,rows){
+     pool.query("select A.*,C.is_country_divided,C.country as camp_country,C.type as camp_type from advertisor as A, campaign C where A.campaign_id=C.id  and A.adv_id="+req.params.adv_id,function(err,rows){
       pool.query("select * from redirect_wrapper",function(err,redirect_data){
          if(!err) {
           //  console.log(rows);
@@ -59,7 +59,7 @@ exports.detail = function(req, res){
 exports.add = function(req, res){
   if(typeof(req.params.campaign_id) != "undefined")
   {
-    pool.query("select * from campaign where id="+req.params.campaign_id,function(err,campaign_detail){
+    pool.query("select id, name, country, is_country_divided, type as camp_type, active from campaign where id="+req.params.campaign_id,function(err,campaign_detail){
       pool.query("select * from redirect_wrapper",function(err,redirect_data){
         if(!err) {
           res.render('advertisor_detail',{advertisor: campaign_detail[0],add: true,redirect_data:redirect_data});
@@ -72,14 +72,15 @@ exports.save = function(req, res){
   // Insert
   if(typeof(req.body.campaign_id) != "undefined")
   {
-    var insert_sql = "insert into advertisor (adv_name,vendor,campaign_id,enabled_time,country,redirect_id,is_divisor_needed,type,active) values ('"+req.body.adv_name+"',"+req.body.vendor+"',"+req.body.campaign_id+","+req.body.enabled_time+",'"+req.body.country+"',"+req.body.redirect_id+","+req.body.is_divisor_needed+","+req.body.type+",1 )";
+    var insert_sql = "insert into advertisor (adv_name,vendor,campaign_id,enabled_time,country,redirect_id,is_divisor_needed,type,active) values ('"+req.body.adv_name+"',"+req.body.vendor+","+req.body.campaign_id+","+req.body.enabled_time+",'"+req.body.country+"',"+req.body.redirect_id+","+req.body.is_divisor_needed+","+req.body.type+",1 )";
     // console.log(insert_sql);
     pool.query(insert_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Added Successfully.');
         res.redirect('/campaign');
       }else{
-        req.flash('error', 'Attention! Failed to add.');
+        console.log(err);
+        req.flash('error', 'Attention! Failed to add.'+err);
         res.redirect('/campaign');  
       }
     });
@@ -89,14 +90,14 @@ exports.save = function(req, res){
   if(typeof(req.body.advertisor_id) != "undefined")
   {
     var enabled_time = parseInt(req.body.enabled_time.split(" ")[0])
-    var update_sql = "update advertisor set adv_name='"+req.body.adv_name+"',vendor='"+req.body.vendor+"',enabled_time="+enabled_time+",country='"+req.body.country+"',redirect_id="+req.body.redirect_id+",is_divisor_needed="+req.body.is_divisor_needed+", active="+req.body.active+", type="+req.body.type+" where adv_id="+req.body.advertisor_id;
+    var update_sql = "update advertisor set adv_name='"+req.body.adv_name+"',vendor="+req.body.vendor+",enabled_time="+enabled_time+",country='"+req.body.country+"',redirect_id="+req.body.redirect_id+",is_divisor_needed="+req.body.is_divisor_needed+", active="+req.body.active+", type="+req.body.type+" where adv_id="+req.body.advertisor_id;
     console.log(update_sql);
     pool.query(update_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Updated Successfully.');
         res.redirect('/advertisor/'+req.body.camp_id);
       }else{
-        req.flash('error', 'Attention! Failed to edit.');
+        req.flash('error', 'Attention! Failed to edit.'+err);
         res.redirect('/advertisor/'+req.body.camp_id);
       }
     });

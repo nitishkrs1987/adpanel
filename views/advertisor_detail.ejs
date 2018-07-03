@@ -9,10 +9,12 @@
           
           <div class="form-group col-md-6">
               <label for="enabled_time">Expiry Time</label>
-              <input type="number" class="form-control" id="enabled_time" required aria-describedby="enabled_time_addon" name="enabled_time" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.enabled_time %>" readonly Hours <%}%>>
-              <!-- <div class="input-group-append">
-                  <span class="input-group-text" id="enabled_time_addon">Hours</span>
-              </div>       -->
+              <div class="input-group">
+                <input type="number" class="form-control" id="enabled_time" required aria-describedby="enabled_time_addon" name="enabled_time" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.enabled_time %>" readonly <%}%>>
+                <div class="input-group-append">
+                    <span class="input-group-text" style="color:#dc3545;" id="enabled_time_addon"><% if(advertisor.camp_type == 1){ %>Hours<%}else{ %>Days<%}%></span>
+                </div>  
+              </div>
           </div>
 
           <div class="form-group col-md-6">
