@@ -1,7 +1,7 @@
 <form action="/campaign/save" method="post">
     <div class="form-group col-md-3">
         <label for="name">Campaign Name</label>
-        <input type="text" class="form-control" id="name" name="name" <% if(add == true){ %> value="" <%}else{ %> value="<%= campaign.name %>" <%}%>>      
+        <input type="text" class="form-control" id="name" name="name" <% if(add == true){ %> value="" <%}else{ %> value="<%= campaign.name %>" <%}%>> 
     </div>
     
     <% if(add == true){ %>
@@ -10,6 +10,29 @@
             <select class="form-control" id="is_country_divided" name="is_country_divided">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
+            </select>      
+        </div>
+        
+        <div class="form-group col-md-3">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" name="type">
+                <option value="1">Ads</option>
+                <option value="2">Self-JS</option>
+            </select>      
+        </div>
+        
+        <div class="form-group col-md-3">
+            <label for="country">Target Country</label>
+            <select class="form-control" id="country" name="country">
+                <option value="IN">India</option>
+                <option value="MY">Malaysia</option>
+                <option value="ID">Indonesia</option>
+                <option value="HK">Hong-kong</option>
+                <option value="SG">Singapore</option>
+                <option value="TH">Vietnam</option>
+                <option value="TH">Thailand</option>
+                <option value="PH">Philippines</option>
+                <option value="AE">Dubai</option>
             </select>      
         </div>
         
@@ -30,7 +53,27 @@
             </select>   
             <!-- <input type="text" class="form-control" id="is_country_divided" name="is_country_divided" value="">       -->
         </div>
-        
+        <div class="form-group col-md-3">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" name="type">
+                <option value="1" <% if(campaign.type==1){%>selected <% } %>} %>>Ads</option>
+                <option value="2" <% if(campaign.type==2){%>selected <% } %>} %>>Self-JS</option>
+            </select>      
+        </div>
+        <div class="form-group col-md-3">
+            <label for="country">Target Country</label>
+            <select class="form-control" id="country" name="country">
+                <option value="IN" <% if(campaign.country=="IN"){%>selected <% } %>} %>>India</option>
+                <option value="MY" <% if(campaign.country=="MY"){%>selected <% } %>} %>>Malaysia</option>
+                <option value="ID" <% if(campaign.country=="ID"){%>selected <% } %>} %>>Indonesia</option>
+                <option value="HK" <% if(campaign.country=="HK"){%>selected <% } %>} %>>Hong-kong</option>
+                <option value="SG" <% if(campaign.country=="SG"){%>selected <% } %>} %>>Singapore</option>
+                <option value="TH" <% if(campaign.country=="TH"){%>selected <% } %>} %>>Vietnam</option>
+                <option value="TH" <% if(campaign.country=="TH"){%>selected <% } %>} %>>Thailand</option>
+                <option value="PH" <% if(campaign.country=="PH"){%>selected <% } %>} %>>Philippines</option>
+                <option value="AE" <% if(campaign.country=="AE"){%>selected <% } %>} %>>Dubai</option>
+            </select>      
+        </div>
         <div class="form-group col-md-3">
             <label for="redir_url">Active</label>
             <select class="form-control" id="active" name="active">

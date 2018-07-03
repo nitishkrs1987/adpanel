@@ -1,0 +1,13 @@
+
+<script src="/js/browser.js"></script>
+<button class="btn btn-danger" id="download-btn" data-files="/output/a11.js /output/a21.js">Generate Backend1 JS File</button>
+<!-- <button class="btn btn-danger" id="download-btn" data-files="output/a11.js output/a21.js">Generate Backend1 JS File</button> -->
+
+<%= files %>
+
+<script>
+  document.querySelector('#download-btn').addEventListener('click', function (e) {
+    var files = e.target.dataset.files.split(' ');
+    multiDownload(files);
+  });
+</script>

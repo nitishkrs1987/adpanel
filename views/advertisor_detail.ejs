@@ -22,6 +22,12 @@
                   <option value="1" <% if(advertisor.active==1){%>selected <% } %>} %>>Yes</option>
                 </select>       
           </div>
+          <div class="form-group col-md-6">
+            <label for="enabled_time">Vendor</label>
+            <input type="number" class="form-control" name="vendor" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.vendor %>" readonly <%}%>>   
+          </div>
+
+
       </div>
     
     <div class="col-xl">
@@ -31,7 +37,7 @@
             <input type="text" class="form-control" id="country" required name="country" <% if(add == true){ %> value="IN" <%}else{ %> value="<%= advertisor.country %>" readonly <%}%>>   
           </div>
         <%}else{%>
-          <input type="hidden" name="country" value="IN">
+          <input type="hidden" name="country" value="<%= advertisor.camp_country %>">
         <%}%>
         <div class="form-group col-md-6">
             <label for="redirect_id">Redirect URL</label>        
@@ -56,6 +62,7 @@
               <select name="type" id="type" class="form-control" required <% if(add == false){ %> disabled<% } %> >
                 <option value="1" <% if(advertisor.type==1){%>selected <% } %>} %> >Single</option>
                 <option value="2" <% if(advertisor.type==2){%>selected <% } %>} %>>Multi</option>
+                <option value="3" <% if(advertisor.type==3){%>selected <% } %>} %>>Multi-Product Choice</option>
               </select>       
         </div> 
     </div>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<% include include/head %>
+</head>
+<body>
+  <div class="container">
+      <header>
+          <% include include/header %>
+      </header>
+    <h1>Front JS</h1>
+    <% include include/alert %>
+   
+    <form action="/frontjs/save" method="post" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col-xl">
+            <div class="form-group col-md-6">
+                <label for="adv_name">Images Size</label>
+                <select name="size" class="form-control" required>
+                  <option value="">Select Image Size</option>
+                  <option value="300x100">300x100</option>
+                  <option value="300x250">300x250</option>
+                  <option value="729x90">729x90</option>
+                </select>     
+            </div>
+            
+            <div class="form-group col-md-6">
+                <label for="image">Images</label>
+                <input type="file" class="form-control" id="image" required name="image" >      
+            </div>
+
+        </div>
+        <div class="col-xl">
+            <div class="form-group col-md-6">
+                <label for="link">URL to be open</label>
+                <input type="url" class="form-control" id="link" required name="link" >      
+            </div>
+            
+            <div class="form-group col-md-6">
+                <label for="ga">GA ID</label>
+                <input type="text" class="form-control" id="ga" required name="ga" >      
+            </div>
+        </div>
+       
+      </div>
+      <input type="hidden" name="campaign_id" value="<%= campaign_id %>">
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-warning cancel">Cancel</button>
+    </form>
+
+  </div>
+</body>
+</html>

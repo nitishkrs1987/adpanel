@@ -18,7 +18,7 @@
                     <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
                     <!-- <span class="input-group-text" id="basic-addon3"><%= base_url[0] %>?url=</span> -->
                   </div>
-                <input type="url" name="links[]" required aria-describedby="basic-addon3" class="form-control" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
+                <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
               </div>          
             </div>
             <div class="col-xl-2">
@@ -40,7 +40,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
             </div>
-            <input type="url" name="links[]" required aria-describedby="basic-addon3" class="form-control" id="link1" value="">
+            <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control" id="link1" value="">
           </div>
         </div>
         <div class="col-xl-1">

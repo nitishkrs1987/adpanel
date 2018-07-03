@@ -30,7 +30,7 @@
                   <select name="advertisor" id="advertisor_select_by_country" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>
-                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
+                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
                      <% } %>
                   </select>
                 </div>
@@ -42,7 +42,7 @@
                   <select name="advertisor" id="advertisor" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>
-                    <option value="<%= advertisor[i].adv_id %>"><%= advertisor[i].adv_name %></option>
+                    <option value="<%= advertisor[i].adv_id %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %></option>
                     <% } %>
                   </select>
                 </div>
@@ -60,12 +60,20 @@
           </div>
         </div>
     </div> 
+   
     <div class="row">
         <div class="col-md-12" style="display:none">
           <h2>Affiliate Details</h2>
           <div id="affiliate"></div>
         </div>
     </div> 
+   
+      <div class="row">
+        <div class="col-md-12" style="display:none">
+          <button class="btn btn-danger" rel="<%= advertisor[0].adv_id %>" type="button" id="gen_new_links" name="gen_new_links">Generate New Links</button>
+        </div>
+      </div> 
+   
   </div>
 
   <footer>

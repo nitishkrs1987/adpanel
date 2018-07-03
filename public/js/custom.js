@@ -4,24 +4,37 @@ jQuery(document).ready(function(){
   });
 
   
-  jQuery('body').on("click","#download_files",function(){
-    jQuery.get("/files_in_output",function(files){
-      files = JSON.parse(files);
-      console.log(files);
-      multiDownload(files);
+  jQuery('body').on("click","#gen_new_links",function(){
+    var adv_id = $(this).attr('rel');
+    jQuery.get("/update_plinks/"+adv_id,function(resp){
+      // console.log(resp);
+      if(resp)
+      {
+        alert("Update Successfully");
+      }
     });
-    // files = new Array("/output/promo_img_in.js");
-    // console.log(files);
-    // multiDownload(files);
   });
+  
+
+
   /***************** Advertisor ************************/
     jQuery("#advertisor").change(function(){
       var $option = $(this).find('option:selected');
-      jQuery.get("/affiliate/"+$option.val(),function(resp){
-        // console.log(resp);
-        jQuery("#affiliate").html(resp);
-        jQuery("#affiliate").parent().show();
-      });
+      var $type = $option.attr("option-type");
+      
+      if($type == 3)
+      {
+        jQuery("#gen_new_links").parent().show();
+        jQuery("#affiliate").parent().hide();
+      }else{
+        jQuery("#gen_new_links").parent().hide();
+        jQuery.get("/affiliate/"+$option.val(),function(resp){
+          // console.log(resp);
+          jQuery("#affiliate").html(resp);
+          jQuery("#affiliate").parent().show();
+        });
+      }
+     
 
       jQuery.get("/advertisor_detail/"+$option.val(),function(resp){
         // console.log(resp);
@@ -74,6 +87,19 @@ jQuery(document).ready(function(){
       jQuery("#campaign_detail").text("");
     });
 
+    jQuery('body').on("click",".gen_download_files",function(){
+      jQuery(".download_files").attr("disabled","disabled");
+    });
+    jQuery('body').on("click",".download_files",function(){
+      jQuery.get("/files_in_output",function(files){
+        files = JSON.parse(files);
+        console.log(files);
+        multiDownload(files);
+      });
+      // files = new Array("/output/promo_img_in.js");
+      // console.log(files);
+      // multiDownload(files);
+    });
     /************** Affiliate ************************/
     jQuery('body').on("click","#add_link",function(){
       var newrow = jQuery(this).prev().clone();
