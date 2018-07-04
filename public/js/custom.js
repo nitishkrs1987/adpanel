@@ -24,6 +24,7 @@ jQuery(document).ready(function(){
       
       if($type == 3)
       {
+        jQuery("#gen_new_links").attr("rel",$option.val());
         jQuery("#gen_new_links").parent().show();
         jQuery("#affiliate").parent().hide();
       }else{
