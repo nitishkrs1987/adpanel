@@ -22,8 +22,12 @@ exports.index = function (req,res) {
       helper.deleteFiles().then(function (dd){ 
         unicountry(rows[0].id,rows[0].type,function(resp){
           fs.writeFile(filename, resp, function(err) {
-            if (err) reject(err);
-            else res.download(filename);
+            if (err) {reject(err);}
+            else{
+              req.flash('success', 'File(s) generated successfully Successfully.');
+              res.redirect('/campaign')
+            }
+            // else res.download(filename);
           });   
         }); 
       }); 
@@ -67,7 +71,7 @@ exports.index = function (req,res) {
         Promise.all(promises).then(function(values) {
           // console.log("142");
           req.flash('success', 'File(s) generated successfully Successfully.');
-          res.redirect('/campaign')
+          res.redirect('/campaign');
         });      
     }
   });
@@ -131,7 +135,7 @@ function unicountry(campaign_id,camp_type,callback)
   database = new Database();
   gen_helper = new generate_helpers();
   var generate = "var a = Math.round(new Date().getTime() / 1000);";
-  database.query("select * from advertisor where active=1 and campaign_id="+campaign_id).then( rows => {
+  database.query("select A.*,B.live_url from advertisor A,campaign B where A.campaign_id=B.id and A.active=1 and A.campaign_id="+campaign_id).then( rows => {
     advertisor = rows;
     var ids= "";
     var multi_prod_ids= "";

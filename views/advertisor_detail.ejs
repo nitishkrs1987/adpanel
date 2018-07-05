@@ -24,6 +24,15 @@
                   <option value="1" <% if(advertisor.active==1){%>selected <% } %>} %>>Yes</option>
                 </select>       
           </div>
+          
+          <div class="form-group col-md-6">
+              <label for="is_bounce_req">Is Bounce Required</label>        
+                <select name="is_bounce_req" id="is_bounce_req" class="form-control" required <% if(add == false){ %> disabled<% } %> >
+                  <option value="0" <% if(advertisor.is_bounce_req==0){%>selected <% } %>} %> >No</option>
+                  <option value="1" <% if(advertisor.is_bounce_req==1){%>selected <% } %>} %>>Yes</option>
+                </select>       
+          </div>
+
           <div class="form-group col-md-6">
             <label for="enabled_time">Vendor</label>
             <input type="number" class="form-control" name="vendor" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.vendor %>" readonly <%}%>>   
@@ -67,6 +76,12 @@
                 <option value="3" <% if(advertisor.type==3){%>selected <% } %>} %>>Multi-Product Choice</option>
               </select>       
         </div> 
+
+        <div class="form-group col-md-6">
+          <label for="enabled_time">Bounce IFrame ID</label>
+          <input type="text" class="form-control" name="bounce_frame_id" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.bounce_frame_id %>" readonly <%}%>>   
+        </div>
+
     </div>
   </div>
     <% if(add == true){ %>

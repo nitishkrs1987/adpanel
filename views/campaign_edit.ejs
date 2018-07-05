@@ -43,6 +43,10 @@
                 <option value="1">Yes</option>
             </select>      
         </div>
+        <div class="form-group col-md-3">
+            <label for="live_url">Live URL</label>
+           <input type="url" class="form-control" id="live_url" name="live_url" value="">  
+        </div>
     <%}else{%>
         <input type="hidden" name="id" value="<%= campaign.id %>">
         <div class="form-group col-md-3">
@@ -81,6 +85,10 @@
                 <option value="1" <% if(campaign.active==1){%>selected <% } %>>Yes</option>
             </select>   
             <!-- <input type="text" class="form-control" id="active" name="active" value="<%= campaign.active %>">       -->
+        </div>
+        <div class="form-group col-md-3">
+            <label for="live_url">Live URL</label>
+           <input type="url" class="form-control" id="live_url" name="live_url" value="<%= campaign.live_url %>">  
         </div>
     <%}%>
     

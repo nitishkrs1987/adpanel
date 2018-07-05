@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const directory = 'output';
 class generate_helper{
 
   generate_js(advertisor,affiliate,country,callback ){
@@ -12,14 +15,22 @@ class generate_helper{
           generate += " localStorage['"+cookie_custom_name+"'] = "+advertisor[i].adv_name.toLowerCase()+"_time;";
           if(advertisor[i].type == 3)  //Multi choose product
           {
-            generate += "var z_links = new Array(";
+            var multi_prod_file_content = "var z_links = new Array(";
             for(var j=0; j <affiliate.length;j++)
             {
-              generate += "'"+affiliate[j].link+"',";
+              multi_prod_file_content += "'"+affiliate[j].link+"',";
             }
-            generate = generate.slice(0, -1);
-            generate += ");";
-      
+            multi_prod_file_content = multi_prod_file_content.slice(0, -1);
+            multi_prod_file_content += ");";
+
+            var multi_prod_file_name = "p_"+advertisor[i].adv_name+".js";
+            // console.log(multi_prod_file_content);
+            fs.writeFile(directory+"/"+multi_prod_file_name, multi_prod_file_content, function(err) {
+              if (err) console.log(err);
+              else console.log(1);
+            }); 
+            var multi_prod_file_url = advertisor[i].live_url+"api/plinks/"+multi_prod_file_name;
+            generate += "var head = document.getElementsByTagName('head')[0];var script = document.createElement('script');script.type = 'text/javascript';script.src = '"+ multi_prod_file_url +"';head.appendChild(script);rand = (Math.floor(Math.random() * 50) + 1  );";
             generate += "var rand = (Math.floor(Math.random() * "+parseInt(process.env.PRODUCT_LIMIT)+") + 1  );";
             generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
       
@@ -55,6 +66,14 @@ class generate_helper{
               }
               generate += "}";  
             }
+          }
+          
+          if(advertisor[i].is_bounce_req == 1)
+          {
+            generate += "var bnc = Math.floor(Date.now() / 1000);";
+            generate += "if (bnc % 2 == 0){";
+            generate += "setTimeout(function(){var zl = document.getElementById('"+advertisor[i].bounce_frame_id+"').contentWindow.document;zl.open();zl.write(\"<iframe src='"+advertisor[i].bounce_url+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\");zl.close();}, 8000);";
+            generate += "}";
           }
           generate += "}";
         } //End of for loop

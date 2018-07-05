@@ -3,6 +3,9 @@
 robots.txt
 output
 .DS_Store
+app/.DS_Store
+views/.DS_Store
+public/.DS_Store
 back
 backup
 uploads

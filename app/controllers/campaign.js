@@ -27,7 +27,7 @@ exports.save = function (req,res) {
   // console.log(req.body);
   if(typeof(req.body.id) == "undefined")
   {
-    var insert_sql = "insert into campaign (name,is_country_divided,country,type,active) values ('"+req.body.name+"','"+req.body.country+"',"+req.body.is_country_divided+","+req.body.type+","+req.body.active+" )";
+    var insert_sql = "insert into campaign (name,live_url,is_country_divided,country,type,active) values ('"+req.body.name+"', '"+ req.body.live_url +"', '"+req.body.country+"',"+req.body.is_country_divided+","+req.body.type+","+req.body.active+" )";
     // console.log(insert_sql);
     pool.query(insert_sql,function(err,rows){
       if(!err) {
@@ -39,7 +39,7 @@ exports.save = function (req,res) {
       }
     });
   }else{
-    var update_sql = "update campaign set name = '"+req.body.name+"', country = '"+req.body.country+"', is_country_divided = "+req.body.is_country_divided+", type="+ req.body.type+", active= "+req.body.active+" where id="+req.body.id;
+    var update_sql = "update campaign set name = '"+req.body.name+"',live_url= '"+req.body.live_url+"', country = '"+req.body.country+"', is_country_divided = "+req.body.is_country_divided+", type="+ req.body.type+", active= "+req.body.active+" where id="+req.body.id;
     // console.log(update_sql);
     pool.query(update_sql,function(err,rows){
       if(!err) {        
