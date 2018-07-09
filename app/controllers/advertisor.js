@@ -72,8 +72,15 @@ exports.save = function(req, res){
   // Insert
   if(typeof(req.body.campaign_id) != "undefined")
   {
-    var insert_sql = "insert into advertisor (adv_name,vendor,campaign_id,enabled_time,country,redirect_id,is_divisor_needed,type,is_bounce_req,bounce_frame_id,bounce_url,active) values ('"+req.body.adv_name+"',"+req.body.vendor+","+req.body.campaign_id+","+req.body.enabled_time+",'"+req.body.country+"',"+req.body.redirect_id+","+req.body.is_divisor_needed+","+req.body.type+","+req.body.is_bounce_req+",'"+req.body.bounce_frame_id+"', '"+req.body.bounce_url+"', "+req.body.active+" )";
-    // console.log(insert_sql);
+    // var insert_sql = "insert into advertisor (adv_name,vendor,campaign_id,enabled_time,country,redirect_id,is_divisor_needed,type,is_bounce_req,bounce_frame_id,bounce_url,active) values ('"+req.body.adv_name+"',"+req.body.vendor+","+req.body.campaign_id+","+req.body.enabled_time+",'"+req.body.country+"',"+req.body.redirect_id+","+req.body.is_divisor_needed+","+req.body.type+","+req.body.is_bounce_req+",'"+req.body.bounce_frame_id+"', '"+req.body.bounce_url+"', "+req.body.active+" )";
+    var insert_sql = "insert into advertisor set "
+	  var advertiser_data = req.body;
+    for (let key in advertiser_data)
+    {
+      insert_sql += key+"='"+advertiser_data[key]+"',"
+    }
+    insert_sql = insert_sql.slice(0, -1);
+    console.log(insert_sql);
     pool.query(insert_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Added Successfully.');
@@ -89,9 +96,21 @@ exports.save = function(req, res){
   //Edit
   if(typeof(req.body.advertisor_id) != "undefined")
   {
-    var enabled_time = parseInt(req.body.enabled_time.split(" ")[0])
-    var update_sql = "update advertisor set adv_name='"+req.body.adv_name+"', vendor="+req.body.vendor+", enabled_time="+enabled_time+", country='"+req.body.country+"',redirect_id="+req.body.redirect_id+", is_divisor_needed="+req.body.is_divisor_needed+", active="+req.body.active+", type="+req.body.type+", is_bounce_req="+req.body.is_bounce_req+", bounce_frame_id='"+req.body.bounce_frame_id+"', bounce_url='"+req.body.bounce_url+"' where adv_id="+req.body.advertisor_id;
-    // console.log(update_sql);
+    var enabled_time = parseInt(req.body.enabled_time.split(" ")[0]);
+    // var update_sql = "update advertisor set adv_name='"+req.body.adv_name+"', vendor="+req.body.vendor+", enabled_time="+enabled_time+", country='"+req.body.country+"',redirect_id="+req.body.redirect_id+", is_divisor_needed="+req.body.is_divisor_needed+", active="+req.body.active+", type="+req.body.type+", is_bounce_req="+req.body.is_bounce_req+", bounce_frame_id='"+req.body.bounce_frame_id+"', bounce_url='"+req.body.bounce_url+"' where adv_id="+req.body.advertisor_id;
+
+    var update_sql = "update advertisor set ";
+    var advertiser_data = req.body;
+    for (let key in advertiser_data)
+    {
+      if(key != "advertisor_id" && key != "camp_id")
+      {
+        update_sql += key+"='"+advertiser_data[key]+"',"
+      }
+    }
+    update_sql = update_sql.slice(0, -1);
+    update_sql +=  " where adv_id="+advertiser_data["advertisor_id"];
+    console.log(update_sql);
     pool.query(update_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Updated Successfully.');

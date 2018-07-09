@@ -12,7 +12,7 @@
     <p>Text about Advertisors....</p>
     <% include include/alert %>
     <div class="row">
-        <% if(advertisor[0].is_country_divided ==1){ %>
+        <% if(advertisor[0].is_country_divided ==1){ %>  <!-- Advertiser divided by country -->
           <div class="col-md-3">
               <div class="country">
                   <!-- <label>Select Campaign</label> -->
@@ -30,19 +30,19 @@
                   <select name="advertisor" id="advertisor_select_by_country" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>
-                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
+                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>" option-divisor="<%= advertisor[i].is_divisor_needed %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
                      <% } %>
                   </select>
                 </div>
           </div>
-        <% }else{ %>
+        <% }else{ %>  <!-- Advertiser in single country -->
           <div class="col-md-6">
               <div class="advertisor">
                   <!-- <label>Select Campaign</label> -->
                   <select name="advertisor" id="advertisor" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>
-                    <option value="<%= advertisor[i].adv_id %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %></option>
+                      <option value="<%= advertisor[i].adv_id %>" option-divisor="<%= advertisor[i].is_divisor_needed %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %></option>
                     <% } %>
                   </select>
                 </div>
@@ -60,7 +60,11 @@
           </div>
         </div>
     </div> 
-   
+    <div class="row">
+      <div class="col-md-12" style="display:none">
+        <button class="btn btn-danger" rel="<%= advertisor[0].adv_id %>" type="button" id="gen_new_links" name="gen_new_links">Generate New Links</button>
+      </div>
+    </div> 
     <div class="row">
         <div class="col-md-12" style="display:none">
           <h2>Affiliate Details</h2>
@@ -68,11 +72,7 @@
         </div>
     </div> 
    
-      <div class="row">
-        <div class="col-md-12" style="display:none">
-          <button class="btn btn-danger" rel="<%= advertisor[0].adv_id %>" type="button" id="gen_new_links" name="gen_new_links">Generate New Links</button>
-        </div>
-      </div> 
+     
    
   </div>
 

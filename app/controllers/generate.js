@@ -23,11 +23,11 @@ exports.index = function (req,res) {
         unicountry(rows[0].id,rows[0].type,function(resp){
           fs.writeFile(filename, resp, function(err) {
             if (err) {reject(err);}
-            else{
-              req.flash('success', 'File(s) generated successfully Successfully.');
-              res.redirect('/campaign')
-            }
-            // else res.download(filename);
+            // else{
+            //   req.flash('success', 'File(s) generated successfully Successfully.');
+            //   res.redirect('/campaign')
+            // }
+            else{res.download(filename);}
           });   
         }); 
       }); 

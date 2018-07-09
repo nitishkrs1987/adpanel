@@ -1,13 +1,13 @@
 
-<form action="/advertisor/save" method="post">
+<form action="/advertisor/save" method="post" class="advertiser">
   <div class="row">
       <div class="col-xl">
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-9">
               <label for="adv_name">Advertisor Name</label>
               <input type="text" class="form-control" id="adv_name" required name="adv_name" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.adv_name %>" readonly <%}%> >      
           </div>
           
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-9">
               <label for="enabled_time">Expiry Time</label>
               <div class="input-group">
                 <input type="number" class="form-control" id="enabled_time" required aria-describedby="enabled_time_addon" name="enabled_time" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.enabled_time %>" readonly <%}%>>
@@ -17,7 +17,7 @@
               </div>
           </div>
 
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-9">
               <label for="active">Active</label>        
                 <select name="active" id="active" class="form-control" required <% if(add == false){ %> disabled<% } %> >
                   <option value="0" <% if(advertisor.active==0){%>selected <% } %>} %> >No</option>
@@ -25,31 +25,38 @@
                 </select>       
           </div>
           
-          <div class="form-group col-md-6">
+            <div class="form-group col-md-9" <% if(add == true || advertisor.type < 3){%> style="display:none;" <% } %>> 
+              <label for="product_count">Product Count</label>
+              <input type="number" class="form-control" id="product_count" name="product_count" <% if(add == true){ %> value="10" <%}else{ %> value="<%= advertisor.product_count %>" readonly <%}%>>   
+            </div>
+          
+          <div class="form-group col-md-9">
               <label for="is_bounce_req">Is Bounce Required</label>        
                 <select name="is_bounce_req" id="is_bounce_req" class="form-control" required <% if(add == false){ %> disabled<% } %> >
                   <option value="0" <% if(advertisor.is_bounce_req==0){%>selected <% } %>} %> >No</option>
                   <option value="1" <% if(advertisor.is_bounce_req==1){%>selected <% } %>} %>>Yes</option>
                 </select>       
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-9">
             <label for="enabled_time">Bounce URL</label>
             <input type="url" class="form-control" name="bounce_url" <% if(add == true){ %> value="" <%}else{ %> title="<%= advertisor.bounce_url %>" value="<%= advertisor.bounce_url %>" readonly <%}%>>   
           </div>
+         
+         
          
 
       </div>
     
     <div class="col-xl">
         <% if(advertisor.is_country_divided == 1){ %>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-9">
             <label for="country">Country</label>
             <input type="text" class="form-control" id="country" required name="country" <% if(add == true){ %> value="IN" <%}else{ %> value="<%= advertisor.country %>" readonly <%}%>>   
           </div>
         <%}else{%>
           <input type="hidden" name="country" value="<%= advertisor.camp_country %>">
         <%}%>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-9">
             <label for="redirect_id">Redirect URL</label>        
               <select name="redirect_id" class="form-control" required <% if(add == false){ %> disabled<% } %> >
                   <option value="">Select Redirect URL</option>
@@ -59,7 +66,7 @@
               </select>       
         </div>
         
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-9">
             <label for="is_divisor_needed">Divisor Required</label>        
               <select name="is_divisor_needed" id="is_divisor_needed" required class="form-control" <% if(add == false){ %> disabled<% } %> >
                 <option value="0" <% if(advertisor.is_divisor_needed==0){%>selected <% } %>} %> >No</option>
@@ -67,20 +74,20 @@
               </select>       
         </div>
 
-        <div class="form-group col-md-6">
-            <label for="type">Type</label>        
-              <select name="type" id="type" class="form-control" required <% if(add == false){ %> disabled<% } %> >
+        <div class="form-group col-md-9">
+            <label for="advertiser_type">Type</label>        
+              <select name="type" id="advertiser_type" class="form-control" required <% if(add == false){ %> disabled<% } %> >
                 <option value="1" <% if(advertisor.type==1){%>selected <% } %>} %> >Single</option>
                 <option value="2" <% if(advertisor.type==2){%>selected <% } %>} %>>Multi</option>
                 <option value="3" <% if(advertisor.type==3){%>selected <% } %>} %>>Multi-Product Choice</option>
               </select>       
         </div> 
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-9">
           <label for="enabled_time">Bounce IFrame ID</label>
           <input type="text" class="form-control" name="bounce_frame_id" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.bounce_frame_id %>" readonly <%}%>>   
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-9">
           <label for="enabled_time">Vendor</label>
           <input type="number" class="form-control" name="vendor" <% if(add == true){ %> value="" <%}else{ %> value="<%= advertisor.vendor %>" readonly <%}%>>   
         </div>

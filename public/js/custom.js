@@ -21,12 +21,24 @@ jQuery(document).ready(function(){
     jQuery("#advertisor").change(function(){
       var $option = $(this).find('option:selected');
       var $type = $option.attr("option-type");
-      
+      var $is_divisor_needed = $option.attr("option-divisor");
+      // alert($type);
       if($type == 3)
       {
         jQuery("#gen_new_links").attr("rel",$option.val());
         jQuery("#gen_new_links").parent().show();
-        jQuery("#affiliate").parent().hide();
+        if($is_divisor_needed == 1)
+        {
+          jQuery("#affiliate").parent().show();
+          jQuery.get("/affiliate/"+$option.val(),function(resp){
+            // console.log(resp);
+            jQuery("#affiliate").html(resp);
+            jQuery("#affiliate").parent().show();
+          });
+        }else{
+          jQuery("#affiliate").parent().hide();
+        }
+        
       }else{
         jQuery("#gen_new_links").parent().hide();
         jQuery.get("/affiliate/"+$option.val(),function(resp){
@@ -51,6 +63,19 @@ jQuery(document).ready(function(){
     })
     jQuery('body').on("click","#advertisor_cancel",function(){
       jQuery("#campaign_detail").text("");
+    });
+    jQuery('body').on("change","#advertiser_type",function(){
+      var $type = $(this).val();
+      if($type == 3)
+      {
+        $(".advertiser #product_count").parent().show();
+        $("#gen_new_links").parent().show();
+        $("#affiliate").parent().hide();
+      }else{
+        $(".advertiser #product_count").parent().hide();
+        $("#gen_new_links").parent().hide();
+        $("#affiliate").parent().show();
+      }
     });
     jQuery('body').on("change","#adv_country",function(){
       var $country = $(this).find('option:selected');
@@ -111,15 +136,31 @@ jQuery(document).ready(function(){
       jQuery(this).prev().after(newrow);
       return false;
     });
-    jQuery('body').on("click",".remove_link",function(){
-      if (window.confirm("Are you sure?")) {
-        var remove_link = jQuery(this);
-        var affiliate_id = remove_link.attr("rel");
-        jQuery.get("/affiliate/remove/"+affiliate_id,function(resp){
-          remove_link.parent().parent().parent().remove();
-        });
+    jQuery('body').on("click",".remove_this",function(){
+      // var remove_link = jQuery(this);
+      if(jQuery(".link_new").length > 1)
+      {
+        jQuery(this).parent().parent().parent().remove();
+      }else{
+        alert("You can't remove this");
       }
-      return false;
+      
+    });
+    jQuery('body').on("click",".remove_link",function(){
+      // alert(jQuery(".link_old").length);
+      //if(jQuery(".link_old").length > 1)
+      {
+        if (window.confirm("Are you sure?")) {
+          var remove_link = jQuery(this);
+          var affiliate_id = remove_link.attr("rel");
+          jQuery.get("/affiliate/remove/"+affiliate_id,function(resp){
+            remove_link.parent().parent().parent().remove();
+          });
+        }
+        return false;
+     // }else{
+     //   alert("You can't remove this");
+      }
     });
 
 
