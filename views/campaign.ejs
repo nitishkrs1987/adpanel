@@ -23,7 +23,7 @@
                   <button id="<%= campaign[i].id %>" class="btn edit_campaign btn-danger">Edit</button>
                   <% if(campaign[i].active == 1) { %>
                     <a href="/advertisor/<%= campaign[i].id %>"><button class="btn btn-danger">View Advertisers</button></a>  
-                    <button id="<%= campaign[i].id %>" class="btn add_advertisor btn-danger">Add Advertisers</button>  
+                    <button id="<%= campaign[i].id %>" class="btn add_advertisor btn-danger">Add Advertiser</button>  
                     <!-- <a href="/frontjs/<%= campaign[i].id %>"><button class="btn btn-danger">View Font JS</button></a>   -->
                     <a href="/generate-file/<%= campaign[i].id %>"><button class="btn btn-danger<% if(campaign[i].is_country_divided == 1){ %> gen_download_files<%} %>">Generate Backend JS File</button></a>
                     <% if(campaign[i].is_country_divided == 1){ %>

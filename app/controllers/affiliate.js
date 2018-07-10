@@ -25,7 +25,7 @@ exports.index = function (req,res) {
 exports.save = function (req,res) {
   // console.log(req.body.multi_choice_prod);
   if(typeof(req.body.adv_id) != "undefined" && typeof(req.body.links) != "undefined" )
-  { 
+  {
       var insert_sql = "";
       var check_dup_divisor = [];
       if(typeof(req.body.multi_choice_prod) != "undefined")
@@ -109,8 +109,10 @@ exports.update_plinks = function(req,res){
       // comp_vendor.find({enabled: 1,track_stock: 1,vendor: redir_url.vendor,country_code: redir_url.country.toLowerCase()},'product_url').sort({'last_update': -1}).limit(parseInt(redir_url.product_count)).exec(function(err, links) 
       comp_vendor.find(query,'product_url').sort({'last_update': -1}).limit(parseInt(redir_url.product_count)).exec(function(err, links) 
       {
-        if(err) {console.log("Error-"+err);}
-        else{
+        if(err) {
+          res.writeHead(200, {"Content-Type": "text/plain"});
+          res.end("0");
+        }else{
             var insert_sql = "";
             for(var i=0;i<links.length;i++)
             {
@@ -133,8 +135,10 @@ exports.update_plinks = function(req,res){
                   });
                 }
               });
-            }
-          
+            }else{
+              res.writeHead(200, {"Content-Type": "text/plain"});
+              res.end("0");
+            }        
         }
       });
     });

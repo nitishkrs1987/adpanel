@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
     var adv_id = $(this).attr('rel');
     jQuery.get("/update_plinks/"+adv_id,function(resp){
       // console.log(resp);
-      if(resp)
+      if(resp == "1")
       {
         alert("Update Successfully");
         $(".links_updated").show();
@@ -16,6 +16,9 @@ jQuery(document).ready(function(){
         $(".links_not_generated").hide();
       }else{
         alert("Failed to update. Possible network error.");
+        $(".links_not_generated").show();
+        $(".links_generated").hide();
+        $(".links_updated").hide();
       }
     });
   });
