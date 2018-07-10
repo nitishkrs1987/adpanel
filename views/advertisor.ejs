@@ -62,7 +62,12 @@
     </div> 
     <div class="row">
       <div class="col-md-12" style="display:none">
-        <button class="btn btn-danger" rel="<%= advertisor[0].adv_id %>" type="button" id="gen_new_links" name="gen_new_links">Generate New Links</button>
+        <button class="btn btn-danger" rel="<%= advertisor[0].adv_id %>" type="button" id="gen_new_links" name="gen_new_links">Generate New Links</button> 
+        
+        <i class="far fa-check-circle fa-2x links_generated hide" style="color:green;vertical-align:middle"></i> 
+        <i class="far fa-times-circle fa-2x links_not_generated hide" style="color:Tomato;vertical-align:middle"></i>
+        <i class="fas fa-flag-checkered fa-2x links_updated hide" style="color:green;vertical-align:middle"></i>
+
       </div>
     </div> 
     <div class="row">
@@ -71,8 +76,6 @@
           <div id="affiliate"></div>
         </div>
     </div> 
-   
-     
    
   </div>
 

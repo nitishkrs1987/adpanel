@@ -67,6 +67,7 @@ module.exports = function (app) {
     app.get('/affiliate/remove/:affiliate_id',affiliate_handler.remove);
     app.get('/files_in_output',generate_handler.files_in_output);
     app.get('/update_plinks/:adv_id',affiliate_handler.update_plinks);
+    app.get('/affiliate/isLinksGenerated/:adv_id',affiliate_handler.isLinksGenerated);
 
     // app.get('/frontjs/:campaign_id',frontjs_handler.index);
     // app.get('/exp',exp_handler.index);

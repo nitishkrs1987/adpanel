@@ -14,7 +14,7 @@ exports.index = function (req,res) {
   if(typeof(req.params.adv_id) != "undefined")
   {
     getRedirectUrl(req.params.adv_id,function(redir_url){
-        pool.query("select * from affiliate where adv_id="+req.params.adv_id,function(err,rows){
+        pool.query("select * from affiliate where affiliate_type=0 and adv_id="+req.params.adv_id+" order by link desc",function(err,rows){
             if(!err) {
               res.render('affiliate',{affiliate: rows,adv_id: req.params.adv_id,redir_url:redir_url.redir_url,is_divisor_needed:redir_url.is_divisor_needed,adv_type:redir_url.type,campaign_id:redir_url.campaign_id});
             }
@@ -94,13 +94,21 @@ exports.update_plinks = function(req,res){
   if(typeof(req.params.adv_id) != "undefined")
   {
     getRedirectUrl(req.params.adv_id,function(redir_url){
+      var query = {};
+      query["enabled"] = 1;
+      query["track_stock"] = 1;
+      query["vendor"] = redir_url.vendor;
+      
       if(redir_url.country.toLowerCase() != "in")
       {
         var mongoose = require("../lib/mongo_conn_asean.js");
+        query["country_code"] = redir_url.country.toLowerCase();
       } else{
         var mongoose = require("../lib/mongo_conn_india.js");
       }
-      comp_vendor.find({enabled: 1,track_stock: 1,vendor: redir_url.vendor,country_code: redir_url.country.toLowerCase()},'product_url').sort({'last_update': -1}).limit(parseInt(redir_url.product_count)).exec(function(err, links) {
+      // comp_vendor.find({enabled: 1,track_stock: 1,vendor: redir_url.vendor,country_code: redir_url.country.toLowerCase()},'product_url').sort({'last_update': -1}).limit(parseInt(redir_url.product_count)).exec(function(err, links) 
+      comp_vendor.find(query,'product_url').sort({'last_update': -1}).limit(parseInt(redir_url.product_count)).exec(function(err, links) 
+      {
         if(err) {console.log("Error-"+err);}
         else{
             var insert_sql = "";
@@ -133,6 +141,25 @@ exports.update_plinks = function(req,res){
     // console.log(req.params.adv_id);
   }
 };
+
+exports.isLinksGenerated = function(req,res){
+  if(typeof(req.params.adv_id) != "undefined")
+  {
+    pool.query("select count(*) as count from affiliate where affiliate_type=1 and adv_id="+req.params.adv_id,function(err,rows){
+      if(!err)
+      {
+        // console.log(rows[0].count);
+        res.end(""+rows[0].count);
+        
+      }else{
+        console.log(err);
+        res.end("");
+      }      
+    });
+  }
+}
+
+
 
 function getRedirectUrl(adv_id,callback) {
   pool.query("select A.is_divisor_needed,A.type,A.product_count,A.campaign_id, B.redir_url,A.vendor,A.country from advertisor as A,redirect_wrapper as B where A.redirect_id=B.redirect_id and A.adv_id="+adv_id,function(err,rows){

@@ -11,11 +11,14 @@ jQuery(document).ready(function(){
       if(resp)
       {
         alert("Update Successfully");
+        $(".links_updated").show();
+        $(".links_generated").hide();
+        $(".links_not_generated").hide();
+      }else{
+        alert("Failed to update. Possible network error.");
       }
     });
   });
-  
-
 
   /***************** Advertisor ************************/
     jQuery("#advertisor").change(function(){
@@ -38,7 +41,19 @@ jQuery(document).ready(function(){
         }else{
           jQuery("#affiliate").parent().hide();
         }
-        
+        jQuery.get("/affiliate/isLinksGenerated/"+$option.val(),function(resp){
+          //console.log(resp);
+          if(parseInt(resp) >0 )
+          {
+            $(".links_generated").show();
+            $(".links_not_generated").hide();
+            $(".links_updated").hide();
+          }else{
+            $(".links_not_generated").show();
+            $(".links_generated").hide();
+            $(".links_updated").hide();
+          }
+        });
       }else{
         jQuery("#gen_new_links").parent().hide();
         jQuery.get("/affiliate/"+$option.val(),function(resp){
@@ -75,6 +90,18 @@ jQuery(document).ready(function(){
         $(".advertiser #product_count").parent().hide();
         $("#gen_new_links").parent().hide();
         $("#affiliate").parent().show();
+      }
+    });
+    jQuery('body').on("change","#is_bounce_req",function(){
+      var $option = $(this).find('option:selected');
+      //  alert($option.val());
+      if($option.val() == 1)
+      {
+        $(".bnc_hide").parent().show();
+        // $(".bnc_hide").addAttr("required");
+      }else{
+        $(".bnc_hide").parent().hide();
+        // $(".bnc_hide").removeAttr("required");
       }
     });
     jQuery('body').on("change","#adv_country",function(){
@@ -147,8 +174,8 @@ jQuery(document).ready(function(){
       
     });
     jQuery('body').on("click",".remove_link",function(){
-      // alert(jQuery(".link_old").length);
-      //if(jQuery(".link_old").length > 1)
+      // alert(jQuery(".link-old").length);
+      if(jQuery(".link-old").length > 1)
       {
         if (window.confirm("Are you sure?")) {
           var remove_link = jQuery(this);
@@ -158,8 +185,8 @@ jQuery(document).ready(function(){
           });
         }
         return false;
-     // }else{
-     //   alert("You can't remove this");
+     }else{
+       alert("You can't remove this");
       }
     });
 
