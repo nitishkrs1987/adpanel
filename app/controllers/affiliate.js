@@ -39,15 +39,18 @@ exports.save = function (req,res) {
         {
           var link = req.body.redir_url+encodeURIComponent(req.body.links[i]);
           insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type) values("+req.body.adv_id+",'"+ link +"',"+req.body.divisor[i]+",0 );";
-          check_dup_divisor.push(parseInt(req.body.divisor[i]));
+          if(req.body.adv_type !=2)
+          {
+            check_dup_divisor.push(parseInt(req.body.divisor[i]));  
+          }          
         }        
       }
-      if(hasDuplicates(check_dup_divisor))
+      if(check_dup_divisor.length>0 && hasDuplicates(check_dup_divisor))
       {
         req.flash('error', "Duplicate Divisor");
         res.redirect('/advertisor/'+req.body.campaign_id);
       }else{
-        console.log(insert_sql);
+        // console.log(insert_sql);
         if(insert_sql != "")
         {
           pool.query("delete from affiliate where adv_id="+req.body.adv_id+";",function(del_err,del_rows){

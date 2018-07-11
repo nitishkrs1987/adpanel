@@ -22,7 +22,8 @@
                             <label for="link1">Divisor</label>
                           <% } %>
                           <div class="input-group">              
-                            <input type="number" name="multi_choice_prod_divisor" class="form-control" value="<%=  affiliate[i].divisor %>">
+                            <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>">
+                            <span class="aff_traffic_inflow">0%</span>
                           </div>
                       </div>  
                     </div> 
@@ -39,8 +40,9 @@
                   <label for="link1">Divisor</label>
                 <% } %>
                 <div class="input-group">              
-                  <input type="number" name="divisor[]" class="form-control" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                  <input type="number" name="divisor[]" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
                   <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>
+                  <span class="aff_traffic_inflow">0%</span>
                 </div>
             </div>       
           </div>
@@ -61,7 +63,7 @@
             <div class="col-xl-2">
                 <label for="link1 mb3">Divisor</label>
                 <div class="input-group">              
-                  <input type="number" name="multi_choice_prod_divisor" class="form-control" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                  <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
                 </div>
             </div>  
           </div> 
@@ -80,8 +82,9 @@
           <div class="col-xl-2">
               <label for="link1 mb3">Divisor</label>
               <div class="input-group">              
-                <input type="number" name="divisor[]" class="form-control" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                <input type="number" name="divisor[]" class="form-control aff_divisor" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
                 <span class="btn btn-info remove_this" rel="" ><i class="fas fa-trash-alt"></i></span>
+                <span class="aff_traffic_inflow">0%</span>
               </div>
           </div>  
         </div> 
@@ -91,6 +94,7 @@
       <% if(is_divisor_needed == 1 || adv_type==2) {%>
         <button class="btn btn-info" id="add_link"><i class="fas fa-plus"></i></button>
       <% } %>
+      <input type="hidden" name="adv_type" value="<%= adv_type %>">
       <input type="hidden" name="adv_id" value="<%= adv_id %>">
       <input type="hidden" name="redir_url" value="<%= redir_url %>">
       <input type="hidden" name="campaign_id" value="<%= campaign_id %>">
