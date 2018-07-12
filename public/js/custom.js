@@ -262,14 +262,15 @@ function getTrafficInflow(divisor)
           subs -= getCommonMultipleArray(divisor,i);
         console.log("subs-"+i+"-"+subs);
         // inflow.push(subs_from - subs);
-        if((subs_from - subs) < 0)
-        {
-          inflow[divisor[i]] = 0;
-        }else{
-          inflow[divisor[i]] = (subs_from - subs);
-          remain = (remain - inflow[divisor[i]]);
-        }
-        
+        // if((subs_from - subs) < 0)
+        // {
+        //   inflow[divisor[i]] = 0;
+        // }else{
+        //   inflow[divisor[i]] = (subs_from - subs);
+        //   remain = (remain - inflow[divisor[i]]);
+        // }
+        inflow[divisor[i]] = Math.abs(subs_from - subs);
+        remain = (remain - inflow[divisor[i]]);
       }
     }
     inflow[1] = remain;
@@ -299,6 +300,7 @@ function getCommonMultipleArray(divisor,k) {
     }
     
     if(eval(cond)){
+      console.log("cond-"+cond);
       count++;
     }
         
