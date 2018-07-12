@@ -228,7 +228,7 @@ function updateTrafficInflow(update)
       $(this).parent().parent().next().children().children().attr("id","inflow_"+$(this).val());
   });
   result = getTrafficInflow(divisor);
-  // console.log(result);
+  console.log(result);
   result.forEach(function(v,k){
     $("#inflow_"+k).attr("aria-valuenow",v);
     $("#inflow_"+k).css("width",v+"%");
@@ -260,7 +260,7 @@ function getTrafficInflow(divisor)
         }
         if(i>1)
           subs -= getCommonMultipleArray(divisor,i);
-        // console.log("subs-"+i+"-"+subs);
+        console.log("subs-"+i+"-"+subs);
         // inflow.push(subs_from - subs);
         if((subs_from - subs) < 0)
         {
