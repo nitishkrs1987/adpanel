@@ -4,4 +4,8 @@
 .show{
     display:block;
 }
-.aff_traffic_inflow{color:#1f1fd0}
+.progress{height: .65rem;font-size:.55rem}
+/* .aff_traffic_inflow{color:#1f1fd0} */
+.no{color:#dc3545}
+.yes{color:#28a745}
+.mt15{margin-top: 15px;}

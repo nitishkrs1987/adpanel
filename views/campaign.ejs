@@ -12,17 +12,15 @@
     <h1>Campaigns</h1>
     <% include include/alert %>
     <div class="campaign" id="campaign">      
-      <table class="table table-hover table-bordered">
-        <tr><th>Campaign</th><th>Country division</th><th>Active</th><th>Operation</th></tr>
+      <table class="table table-hover table-responsive-lg table-bordered">
+        <tr><th>Campaign</th><th style="width:10%">Country division</th><th>Operation</th></tr>
           <% for(var i=0; i<campaign.length; i++) {%>
             <tr>
-                <td><%= campaign[i].name %></td>
-                <td><% if(campaign[i].is_country_divided == 0){ %> No<% }else{ %>Yes <%} %></td>
-                <td><% if(campaign[i].active == 0) { %> No<% }else{ %>Yes <%} %></td>
-                <td>
-                  <button id="<%= campaign[i].id %>" class="btn edit_campaign btn-danger">Edit</button>
+                <td><a href="javascript:void()" class="edit_campaign <% if(campaign[i].active == 0) { %>no<% }else{ %>yes<%} %>" id="<%= campaign[i].id %>"><%= campaign[i].name %></a></td>
+                <td><% if(campaign[i].is_country_divided == 0){ %><span class="no">No</span><% }else{ %><span class="yes">Yes</span> <%} %></td>
+                <td>                  
                   <% if(campaign[i].active == 1) { %>
-                    <a href="/advertisor/<%= campaign[i].id %>"><button class="btn btn-danger">View Advertisers</button></a>  
+                    <a href="/advertisor/<%= campaign[i].id %>"><button class="btn btn-danger">View Advertisers</button></a> 
                     <button id="<%= campaign[i].id %>" class="btn add_advertisor btn-danger">Add Advertiser</button>  
                     <!-- <a href="/frontjs/<%= campaign[i].id %>"><button class="btn btn-danger">View Font JS</button></a>   -->
                     <a href="/generate-file/<%= campaign[i].id %>"><button class="btn btn-danger<% if(campaign[i].is_country_divided == 1){ %> gen_download_files<%} %>">Generate Backend JS File</button></a>

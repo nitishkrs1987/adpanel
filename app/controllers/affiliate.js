@@ -53,7 +53,7 @@ exports.save = function (req,res) {
         // console.log(insert_sql);
         if(insert_sql != "")
         {
-          pool.query("delete from affiliate where adv_id="+req.body.adv_id+";",function(del_err,del_rows){
+          pool.query("delete from affiliate where affiliate_type=0 and adv_id="+req.body.adv_id+";",function(del_err,del_rows){
             if(!del_err) {
               // console.log(insert_sql);
               pool.query(insert_sql,function(err,rows){
@@ -119,7 +119,7 @@ exports.update_plinks = function(req,res){
             var insert_sql = "";
             for(var i=0;i<links.length;i++)
             {
-              p_url = redir_url.redir_url+encodeURIComponent(links[i].product_url)
+              p_url = redir_url.redir_url+encodeURIComponent(links[i].product_url.replace("http:","https:"))
               insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type) values("+req.params.adv_id+",'"+ p_url +"',1,1 );";
             }
             // console.log(insert_sql);

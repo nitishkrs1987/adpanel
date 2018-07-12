@@ -40,7 +40,9 @@ jQuery(document).ready(function(){
             // console.log(resp);
             jQuery("#affiliate").html(resp);
             jQuery("#affiliate").parent().show();
+            updateTrafficInflow(false);
           });
+           
         }else{
           jQuery("#affiliate").parent().hide();
         }
@@ -63,16 +65,18 @@ jQuery(document).ready(function(){
           // console.log(resp);
           jQuery("#affiliate").html(resp);
           jQuery("#affiliate").parent().show();
+          updateTrafficInflow(false);
         });
       }
      
-
+      //Get Advertiser detail
       jQuery.get("/advertisor_detail/"+$option.val(),function(resp){
         // console.log(resp);
         jQuery("#advertisor_details").html(resp);
         jQuery(".adv_column").show();
       });
     });
+//Editing advertiser
     jQuery("body").on('click',"#edit_adv_button",function(){
       $("input").prop("readonly", false);
       $("button").prop("disabled", false);
@@ -176,6 +180,7 @@ jQuery(document).ready(function(){
       }
       
     });
+    
     jQuery('body').on("click",".remove_link",function(){
       // alert(jQuery(".link-old").length);
       if(jQuery(".link-old").length > 1)
@@ -185,8 +190,10 @@ jQuery(document).ready(function(){
           var affiliate_id = remove_link.attr("rel");
           jQuery.get("/affiliate/remove/"+affiliate_id,function(resp){
             remove_link.parent().parent().parent().remove();
+            updateTrafficInflow(false);
           });
         }
+        
         return false;
      }else{
        alert("You can't remove this");
@@ -194,7 +201,128 @@ jQuery(document).ready(function(){
     });
 
 
+   
+
+
+    jQuery('body').on("change",".aff_divisor",function(){
+      if($(this).val() >100)
+      {
+        alert("Invalid Divisor");
+        $(this).val(1);
+      }else{
+        updateTrafficInflow(true);
+      }
+      return true;
+    });
+
   });
+
+function updateTrafficInflow(update)
+{
+  // alert(219);
+  var divisor = [];
+  $(".aff_divisor").each(function() {
+    // alert($(this).val());
+    divisor.push( parseInt( $(this).val() ) );
+    if(update)
+      $(this).parent().parent().next().children().children().attr("id","inflow_"+$(this).val());
+  });
+  result = getTrafficInflow(divisor);
+  // console.log(result);
+  result.forEach(function(v,k){
+    $("#inflow_"+k).attr("aria-valuenow",v);
+    $("#inflow_"+k).css("width",v+"%");
+    $("#inflow_"+k).text(v+"%");
+  });
+}
+function getTrafficInflow(divisor)
+{
+  var inflow = [];
+  var remain = 100;
+  
+  console.log(divisor);
+  if(divisor.length > 1)
+  {
+    divisor = divisor.sort((a, b) => b - a);
+    for(var i=0;i<(divisor.length-1);i++)
+    {
+      if(i==0)
+      {
+        // inflow.push(getCommonMultiple(divisor[i],false));
+        inflow[divisor[i]] = getCommonMultiple(divisor[i],false);
+        remain = (remain - inflow[divisor[i]]);
+      }else{
+        subs_from = getCommonMultiple(divisor[i],false);
+        subs = 0;
+        for(var j=0;j<i;j++)
+        {        
+          subs += getCommonMultiple(divisor[j],divisor[i]);
+        }
+        if(i>1)
+          subs -= getCommonMultipleArray(divisor,i);
+        // console.log("subs-"+i+"-"+subs);
+        // inflow.push(subs_from - subs);
+        if((subs_from - subs) < 0)
+        {
+          inflow[divisor[i]] = 0;
+        }else{
+          inflow[divisor[i]] = (subs_from - subs);
+          remain = (remain - inflow[divisor[i]]);
+        }
+        
+      }
+    }
+    inflow[1] = remain;
+  }else if(divisor[0] >1){
+    inflow[divisor[0]] = getCommonMultiple(divisor[0],false);
+  }else{
+    inflow[divisor[0]] = 100;
+  }
+  
+  
+  // console.log(inflow);
+  return inflow;
+}
+function getCommonMultipleArray(divisor,k) {
+  var z=100;
+  var count = 0;
+  while(z>1) {
+    
+    var cond ="";
+    for(var i=0;i<=k;i++)
+    {
+      if(i>0)
+      {
+        cond += " && ";
+      }
+      cond += z+" % "+divisor[i] + " ==0";
+    }
+    
+    if(eval(cond)){
+      count++;
+    }
+        
+    z--;
+  }
+  return count;
+}
+function getCommonMultiple(num1,num2) {
+  var z=100;
+  var count = 0;
+  while(z>1) {
+   if(num2)
+   {
+    if(z % num1 == 0 && z % num2 == 0)
+      count++;
+   }else{
+    if(z % num1 == 0)
+    count++;
+   }
+    
+    z--;
+  }
+  return count;
+}
 function getText(num)
 {
   if(num == 0)

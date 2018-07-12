@@ -12,20 +12,27 @@
               <% if(i == 0){ %>
                 <label for="link1 mb3">Links</label>
               <% } %>
-              <div class="input-group mb-3">
+              <div class="input-group mt15">
                 <% if(affiliate[i].link == "multi_choice_prod"){ %>                
                           <input type="text" name="multi_choice_prod" autocomplete="off" class="form-control" value="Multichoice product" readonly>
+                          
                         </div>
                       </div>
+                      
                       <div class="col-xl-2">
                           <% if(i == 0){ %>
                             <label for="link1">Divisor</label>
                           <% } %>
-                          <div class="input-group">              
+                          <div class="input-group mt15">              
                             <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>">
-                            <span class="aff_traffic_inflow">0%</span>
+                            
                           </div>
                       </div>  
+                      <div class="col-xl-12">
+                        <div class="progress">
+                          <div class="progress-bar aff_traffic_inflow" role="progressbar" id="inflow_<%=  affiliate[i].divisor %>" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                        </div>
+                      </div>
                     </div> 
                 <% }else if(affiliate[i].affiliate_type == 0){ %>
                   <div class="input-group-prepend">
@@ -35,16 +42,21 @@
                 <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link-old" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
               </div>          
             </div>
-            <div class="col-xl-2">
-                <% if(i == 0){ %>
-                  <label for="link1">Divisor</label>
-                <% } %>
-                <div class="input-group">              
-                  <input type="number" name="divisor[]" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
-                  <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>
-                  <span class="aff_traffic_inflow">0%</span>
+              <div class="col-xl-2">
+                  <% if(i == 0){ %>
+                    <label for="link1">Divisor</label>
+                  <% } %>
+                  <div class="input-group mt15">              
+                    <input type="number" name="divisor[]" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                    <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>                  
+                  </div>
+              </div>
+              <div class="col-xl-12">
+                <div class="progress">
+                  <div class="progress-bar aff_traffic_inflow" role="progressbar" id="inflow_<%=  affiliate[i].divisor %>" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
                 </div>
-            </div>       
+              </div>
+            </div>   
           </div>
           <% } %>
         <% } %>
@@ -67,7 +79,11 @@
                 </div>
             </div>  
           </div> 
-          
+          <div class="col-xl-12">
+            <div class="progress">
+              <div class="progress-bar aff_traffic_inflow" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+          </div>
         <% } %>
         <div class="row">  
           <div class="col-xl-10">
@@ -82,22 +98,26 @@
           <div class="col-xl-2">
               <label for="link1 mb3">Divisor</label>
               <div class="input-group">              
-                <input type="number" name="divisor[]" class="form-control aff_divisor" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
+                <input type="number" name="divisor[]" class="form-control" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
                 <span class="btn btn-info remove_this" rel="" ><i class="fas fa-trash-alt"></i></span>
-                <span class="aff_traffic_inflow">0%</span>
               </div>
           </div>  
+          <div class="col-xl-12">
+            <div class="progress">
+              <div class="progress-bar aff_traffic_inflow" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+          </div>
         </div> 
       <% } %>
     
  
       <% if(is_divisor_needed == 1 || adv_type==2) {%>
-        <button class="btn btn-info" id="add_link"><i class="fas fa-plus"></i></button>
+        <button class="btn btn-info mt15" id="add_link"><i class="fas fa-plus"></i></button>
       <% } %>
       <input type="hidden" name="adv_type" value="<%= adv_type %>">
       <input type="hidden" name="adv_id" value="<%= adv_id %>">
       <input type="hidden" name="redir_url" value="<%= redir_url %>">
       <input type="hidden" name="campaign_id" value="<%= campaign_id %>">
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary mt15">Submit</button>
   </form>
