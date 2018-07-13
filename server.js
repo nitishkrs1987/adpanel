@@ -10,6 +10,7 @@ var db = require('./db');
 var flash = require('connect-flash');
 const app = express();
 var http = require('http').Server(app)
+var helmet = require('helmet')
 
 
 dotenv.load()
@@ -25,6 +26,7 @@ app.use(cookieParser("india.@$shopps#!"));
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({cookie: { maxAge: 60000 }, secret: 'india.@$shopps#!', resave: false, saveUninitialized: false }));
 
+app.use(helmet())
 // app.use(session({cookie: { maxAge: 60000 }}));
 app.use(flash());
 app.use(function(req, res, next){

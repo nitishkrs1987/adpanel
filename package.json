@@ -1,6 +1,6 @@
 {
   "name": "panel",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Ad Admin Panel",
   "main": "server.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
+    "helmet": "^3.12.1",
     "moment": "^2.18.1",
     "mongodb": "^3.0.5",
     "mongoose": "^5.1.7",

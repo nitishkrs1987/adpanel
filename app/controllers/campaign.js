@@ -1,4 +1,5 @@
 const mysql      = require('mysql');
+// var pjson = require('./package.json');
 var pool = mysql.createConnection({
   host     : process.env.MYSQL_HOST,
   user     : process.env.MYSQL_USER,
