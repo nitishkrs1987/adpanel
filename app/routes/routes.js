@@ -14,15 +14,19 @@ const path = require('path');
 //   limits: {fileSize: 1000000, files:1},
 // })
 module.exports = function (app) {
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
   if ('production' === env) {
     app.get('/login', function (req, res) {
-      res.render('home')
+      res.render('login')
     });
     app.get('/', function (req, res) {
       res.redirect('/login');
     });
     app.post('/login',
-        passport.authenticate('local', { failureRedirect: '/' }),
+        passport.authenticate('local', { failureRedirect: '/login',failureFlash:true }),
         function(req, res) {
           res.redirect('/campaign');
     });
