@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing url encoded
 // app.use(require('morgan')('combined'));
 app.use(cookieParser("india.@$shopps#!"));
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({cookie: { maxAge: 60000 }, secret: 'india.@$shopps#!', resave: false, saveUninitialized: false }));
+app.use(require('express-session')({cookie: { maxAge: 60000000 }, secret: 'india.@$shopps#!', resave: false, saveUninitialized: false }));
 
 app.use(helmet())
 // app.use(session({cookie: { maxAge: 60000 }}));
@@ -42,7 +42,7 @@ app.use(passport.session());
 require('./app/routes/routes')(app)
 app.set('port', 3000)
 http.listen(app.get('port'), function () {
-  console.log('listening on port ' + app.get('port'))
+  // console.log('listening on port ' + app.get('port'))
 });
 
 //Login ====================================================
