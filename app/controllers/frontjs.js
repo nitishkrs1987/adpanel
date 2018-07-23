@@ -1,10 +1,4 @@
-const mysql      = require('mysql');
-var pool = mysql.createConnection({
-  host     : process.env.MYSQL_HOST,
-  user     : process.env.MYSQL_USER,
-  password : process.env.MYSQL_PASSWORD,
-  database : process.env.MYSQL_DATABASE
-});
+var pool = require('../lib/mysql_conn.js');
 exports.index = function (req,res) {
   // console.log(req.params.campaign_id);
   if(typeof(req.params.campaign_id) != "undefined")

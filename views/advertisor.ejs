@@ -26,11 +26,10 @@
           </div>
           <div class="col-md-3">
               <div class="advertisor" id="advertisor">
-                  <!-- <label>Select Campaign</label> -->
                   <select name="advertisor" id="advertisor_select_by_country" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>
-                     <option value="<%= advertisor[i].adv_id %>" rel="<%= advertisor[i].country %>" option-divisor="<%= advertisor[i].is_divisor_needed %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
+                     <option value="<%= advertisor[i].adv_id %>" <% if(advertisor[i].active == 0){ %> style="color:red" <% } %> rel="<%= advertisor[i].country %>" option-divisor="<%= advertisor[i].is_divisor_needed %>" option-type="<%= advertisor[i].type %>"><%= advertisor[i].adv_name %> - <%= advertisor[i].country %></option>
                      <% } %>
                   </select>
                 </div>
@@ -38,7 +37,6 @@
         <% }else{ %>  <!-- Advertiser in single country -->
           <div class="col-md-6">
               <div class="advertisor">
-                  <!-- <label>Select Campaign</label> -->
                   <select name="advertisor" id="advertisor" class="form-control">
                     <option value="">Select Advertisor</option>
                     <% for(var i=0; i<advertisor.length; i++) {%>

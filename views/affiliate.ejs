@@ -1,8 +1,6 @@
 <form action="/affiliate/save" method="post">
-  <div class="form-group">    
-         
-      <% if(affiliate.length > 0) {%>
-        
+  <!-- <div class="form-group">     -->         
+      <% if(affiliate.length > 0) { %>        
         <% var multi_choice_prod_flag = false;
           if(adv_type == 3)
           {
@@ -50,10 +48,7 @@
                 <label for="link1 mb3">Links</label>
               <% } %>
               <div class="input-group mt15">
-                <% 
-                             
-                
-                if(affiliate[i].link == "multi_choice_prod"){ %>                
+                <% if(affiliate[i].link == "multi_choice_prod"){ %>                
                           <input type="text" name="multi_choice_prod" autocomplete="off" class="form-control" value="Multichoice product" readonly>
                           
                         </div>
@@ -101,8 +96,8 @@
             </div>   
           </div>
           <% } %>
-        <% } %>
-      <% }else{ %>
+        <% } %> <!-- Closing of for loop -->
+      <% }else{ %>  <!-- If there isn't any affiliate entry -->
         <% if(adv_type == 3){  %>   <!-- Multichoice product section -->
           <div class="row">  
             <div class="col-xl-10">

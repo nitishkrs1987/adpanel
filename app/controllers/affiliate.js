@@ -1,13 +1,4 @@
-const mysql      = require('mysql');
-// const mongoose = require("mongoose");
-var pool = mysql.createConnection({
-  host     : process.env.MYSQL_HOST,
-  user     : process.env.MYSQL_USER,
-  password : process.env.MYSQL_PASSWORD,
-  database : process.env.MYSQL_DATABASE,
-  multipleStatements: true
-});
-
+var pool = require('../lib/mysql_conn.js');
 var comp_vendor = require('../models/product_model.js');
 
 exports.index = function (req,res) {
@@ -61,7 +52,7 @@ exports.save = function (req,res) {
                   req.flash('success', 'Updated Successfully.');
                   res.redirect('/advertisor/'+req.body.campaign_id);
                 }else{
-                  // console.log(err.code);
+                  console.log(err);
                   req.flash('error', err.code);
                   res.redirect('/advertisor/'+req.body.campaign_id);
                 }

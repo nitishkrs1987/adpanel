@@ -1,10 +1,4 @@
-const mysql      = require('mysql');
-var pool = mysql.createConnection({
-  host     : process.env.MYSQL_HOST,
-  user     : process.env.MYSQL_USER,
-  password : process.env.MYSQL_PASSWORD,
-  database : process.env.MYSQL_DATABASE
-});
+var pool = require('../lib/mysql_conn.js');
 exports.index = function (req,res) {
   // console.log(req.params.campaign_id);
   if(typeof(req.params.campaign_id) != "undefined")
@@ -80,13 +74,13 @@ exports.save = function(req, res){
       insert_sql += key+"='"+advertiser_data[key]+"',"
     }
     insert_sql = insert_sql.slice(0, -1);
-    console.log(insert_sql);
+    // console.log(insert_sql);
     pool.query(insert_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Added Successfully.');
         res.redirect('/campaign');
       }else{
-        console.log(err);
+        // console.log(err);
         req.flash('error', 'Attention! Failed to add.'+err);
         res.redirect('/campaign');  
       }
@@ -96,9 +90,7 @@ exports.save = function(req, res){
   //Edit
   if(typeof(req.body.advertisor_id) != "undefined")
   {
-    var enabled_time = parseInt(req.body.enabled_time.split(" ")[0]);
-    // var update_sql = "update advertisor set adv_name='"+req.body.adv_name+"', vendor="+req.body.vendor+", enabled_time="+enabled_time+", country='"+req.body.country+"',redirect_id="+req.body.redirect_id+", is_divisor_needed="+req.body.is_divisor_needed+", active="+req.body.active+", type="+req.body.type+", is_bounce_req="+req.body.is_bounce_req+", bounce_frame_id='"+req.body.bounce_frame_id+"', bounce_url='"+req.body.bounce_url+"' where adv_id="+req.body.advertisor_id;
-
+    
     var update_sql = "update advertisor set ";
     var advertiser_data = req.body;
     for (let key in advertiser_data)
@@ -110,7 +102,7 @@ exports.save = function(req, res){
     }
     update_sql = update_sql.slice(0, -1);
     update_sql +=  " where adv_id="+advertiser_data["advertisor_id"];
-    console.log(update_sql);
+    // console.log(update_sql);
     pool.query(update_sql,function(err,rows){
       if(!err) {
         req.flash('success', 'Updated Successfully.');

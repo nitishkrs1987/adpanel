@@ -1,97 +1,85 @@
 <form action="/campaign/save" method="post">
-    <div class="form-group col-md-3">
-        <label for="name">Campaign Name</label>
-        <input type="text" class="form-control" id="name" name="name" <% if(add == true){ %> value="" <%}else{ %> value="<%= campaign.name %>" <%}%>> 
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="form-group">
+                <label for="name">Campaign Name</label>
+                <input type="text" class="form-control" id="name" name="name" <% if(typeof(campaign) == "undefined"){ %> value="" <%}else{ %> value="<%= campaign.name %>" <%}%>> 
+            </div>
+        
+            <% if(typeof(campaign) != "undefined" ){ %>
+                <input type="hidden" name="id" value="<%= campaign.id %>">
+            <% } %>
+            <div class="form-group">
+                <label for="is_country_divided">is_country_divided</label>
+                <select class="form-control" id="is_country_divided" name="is_country_divided">
+                    <option value="0" <% if(typeof(campaign) != "undefined" && campaign.is_country_divided==0){%>selected <% } %>} %> >No</option>
+                    <option value="1" <% if(typeof(campaign) != "undefined" && campaign.is_country_divided==1){%>selected <% } %>} %>>Yes</option>
+                </select>   
+                <!-- <input type="text" class="form-control" id="is_country_divided" name="is_country_divided" value="">       -->
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select class="form-control" id="type" name="type">
+                    <option value="1" <% if(typeof(campaign) != "undefined" && campaign.type==1){%>selected <% } %>} %>>Ads</option>
+                    <option value="2" <% if(typeof(campaign) != "undefined" && campaign.type==2){%>selected <% } %>} %>>Self-JS</option>
+                </select>      
+            </div>
+            <div class="form-group">
+                <label for="country">Target Country</label>
+                <select class="form-control" id="country" name="country">
+                    <option value="IN" <% if(typeof(campaign) != "undefined" && campaign.country=="IN"){%>selected <% } %>} %>>India</option>
+                    <option value="MY" <% if(typeof(campaign) != "undefined" && campaign.country=="MY"){%>selected <% } %>} %>>Malaysia</option>
+                    <option value="ID" <% if(typeof(campaign) != "undefined" && campaign.country=="ID"){%>selected <% } %>} %>>Indonesia</option>
+                    <option value="HK" <% if(typeof(campaign) != "undefined" && campaign.country=="HK"){%>selected <% } %>} %>>Hong-kong</option>
+                    <option value="SG" <% if(typeof(campaign) != "undefined" && campaign.country=="SG"){%>selected <% } %>} %>>Singapore</option>
+                    <option value="TH" <% if(typeof(campaign) != "undefined" && campaign.country=="TH"){%>selected <% } %>} %>>Vietnam</option>
+                    <option value="TH" <% if(typeof(campaign) != "undefined" && campaign.country=="TH"){%>selected <% } %>} %>>Thailand</option>
+                    <option value="PH" <% if(typeof(campaign) != "undefined" && campaign.country=="PH"){%>selected <% } %>} %>>Philippines</option>
+                    <option value="AE" <% if(typeof(campaign) != "undefined" && campaign.country=="AE"){%>selected <% } %>} %>>Dubai</option>
+                </select>      
+            </div>
+            <div class="form-group">
+                <label for="redir_url">Active</label>
+                <select class="form-control" id="active" name="active">
+                    <option value="0" <% if(typeof(campaign) != "undefined" && campaign.active==0){%>selected <% } %>} %>>No</option>
+                    <option value="1" <% if(typeof(campaign) != "undefined" && campaign.active==1){%>selected <% } %>>Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="live_url">Live URL</label>
+            <input type="url" class="form-control" id="live_url" name="live_url"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.live_url %>" <% }%>  >  
+            </div>
+        </div>
+        <div class="col-xl-6">
+                               
+                <div class="form-group">
+                    <label for="test_url">Test URL</label>
+                    <input type="url" class="form-control" id="test_url" name="test_url"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.test_url %>" <% }%>  >  
+                </div>
+                <div class="form-group">
+                    <label for="host">Host</label>
+                    <input type="text" class="form-control" id="host" name="host"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.host %>" <% }%>  >  
+                </div>
+                <div class="form-group">
+                    <label for="username">FTP Username</label>
+                    <input type="text" class="form-control" id="username" name="username"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.username %>" <% }%>  >  
+                </div>
+                <div class="form-group">
+                    <label for="password">FTP Password</label>
+                    <input type="text" class="form-control" id="password" name="password"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.password %>" <% }%>  >  
+                </div>
+                <div class="form-group">
+                    <label for="directory">FTP Directory</label>
+                    <input type="text" class="form-control" id="directory" name="directory"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.directory %>" <% }%>  >  
+                </div>
+                <div class="form-group">
+                    <label for="zone_id">Cloudflare Zone ID</label>
+                    <input type="text" class="form-control" id="zone_id" name="zone_id"  <% if(typeof(campaign) != "undefined" ){ %> value="<%= campaign.zone_id %>" <% }%>  >  
+                </div>
+
+        </div>
     </div>
-    
-    <% if(add == true){ %>
-        <div class="form-group col-md-3">
-            <label for="is_country_divided">is_country_divided</label>
-            <select class="form-control" id="is_country_divided" name="is_country_divided">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>      
-        </div>
         
-        <div class="form-group col-md-3">
-            <label for="type">Type</label>
-            <select class="form-control" id="type" name="type">
-                <option value="1">Ads</option>
-                <option value="2">Self-JS</option>
-            </select>      
-        </div>
-        
-        <div class="form-group col-md-3">
-            <label for="country">Target Country</label>
-            <select class="form-control" id="country" name="country">
-                <option value="IN">India</option>
-                <option value="MY">Malaysia</option>
-                <option value="ID">Indonesia</option>
-                <option value="HK">Hong-kong</option>
-                <option value="SG">Singapore</option>
-                <option value="TH">Vietnam</option>
-                <option value="TH">Thailand</option>
-                <option value="PH">Philippines</option>
-                <option value="AE">Dubai</option>
-            </select>      
-        </div>
-        
-        <div class="form-group col-md-3">
-            <label for="redir_url">Active</label>
-            <select class="form-control" id="active" name="active">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>      
-        </div>
-        <!-- <div class="form-group col-md-3">
-            <label for="live_url">Live URL</label>
-           <input type="url" class="form-control" id="live_url" name="live_url" value="">  
-        </div> -->
-    <%}else{%>
-        <input type="hidden" name="id" value="<%= campaign.id %>">
-        <div class="form-group col-md-3">
-            <label for="is_country_divided">is_country_divided</label>
-            <select class="form-control" id="is_country_divided" name="is_country_divided">
-                <option value="0" <% if(campaign.is_country_divided==0){%>selected <% } %>} %> >No</option>
-                <option value="1" <% if(campaign.is_country_divided==1){%>selected <% } %>} %>>Yes</option>
-            </select>   
-            <!-- <input type="text" class="form-control" id="is_country_divided" name="is_country_divided" value="">       -->
-        </div>
-        <div class="form-group col-md-3">
-            <label for="type">Type</label>
-            <select class="form-control" id="type" name="type">
-                <option value="1" <% if(campaign.type==1){%>selected <% } %>} %>>Ads</option>
-                <option value="2" <% if(campaign.type==2){%>selected <% } %>} %>>Self-JS</option>
-            </select>      
-        </div>
-        <div class="form-group col-md-3">
-            <label for="country">Target Country</label>
-            <select class="form-control" id="country" name="country">
-                <option value="IN" <% if(campaign.country=="IN"){%>selected <% } %>} %>>India</option>
-                <option value="MY" <% if(campaign.country=="MY"){%>selected <% } %>} %>>Malaysia</option>
-                <option value="ID" <% if(campaign.country=="ID"){%>selected <% } %>} %>>Indonesia</option>
-                <option value="HK" <% if(campaign.country=="HK"){%>selected <% } %>} %>>Hong-kong</option>
-                <option value="SG" <% if(campaign.country=="SG"){%>selected <% } %>} %>>Singapore</option>
-                <option value="TH" <% if(campaign.country=="TH"){%>selected <% } %>} %>>Vietnam</option>
-                <option value="TH" <% if(campaign.country=="TH"){%>selected <% } %>} %>>Thailand</option>
-                <option value="PH" <% if(campaign.country=="PH"){%>selected <% } %>} %>>Philippines</option>
-                <option value="AE" <% if(campaign.country=="AE"){%>selected <% } %>} %>>Dubai</option>
-            </select>      
-        </div>
-        <div class="form-group col-md-3">
-            <label for="redir_url">Active</label>
-            <select class="form-control" id="active" name="active">
-                <option value="0" <% if(campaign.active==0){%>selected <% } %>} %>>No</option>
-                <option value="1" <% if(campaign.active==1){%>selected <% } %>>Yes</option>
-            </select>   
-            <!-- <input type="text" class="form-control" id="active" name="active" value="<%= campaign.active %>">       -->
-        </div>
-        <!-- <div class="form-group col-md-3">
-            <label for="live_url">Live URL</label>
-           <input type="url" class="form-control" id="live_url" name="live_url" value="<%= campaign.live_url %>">  
-        </div> -->
-    <%}%>
-    
     
     
     <button type="submit" class="btn btn-primary">Submit</button>
