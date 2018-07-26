@@ -46,12 +46,17 @@ exports.ftp_upload_file = function(req,res){
                     });
                      
                 });
-                c.connect({
-                    host : rows[0].host,
-                    user : rows[0].username,
-                    password : rows[0].password
-                });
-                
+                try{
+                    c.connect({
+                        host : rows[0].host,
+                        user : rows[0].username,
+                        password : rows[0].password
+                    });
+                }catch(error){
+                    console.log(error);
+                    req.flash('error', 'Failed to Connect. Error-');
+                    res.redirect('/campaign');  
+                }
             });
         }
     });

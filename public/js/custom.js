@@ -137,6 +137,15 @@ jQuery(document).ready(function(){
       });
     });
 
+    jQuery(".ftp_upload_files").click(function(){
+      // var passcode = prompt("Enter Passcode");
+      // if(passcode == "mehra")
+      // {
+      //   return true;
+      // }
+      // return false;
+      return true;
+    });
     jQuery(".add_advertisor").click(function(){
       jQuery.get("/advertisor/add/"+$(this).attr("id"),function(resp){
         // console.log(resp);
@@ -238,9 +247,8 @@ function updateTrafficInflow(update)
 function getTrafficInflow(divisor)
 {
   var inflow = [];
-  var remain = 100;
-  
-  console.log(divisor);
+  var remain = 100;  
+  // console.log(divisor);
   if(divisor.length > 1)
   {
     divisor = divisor.sort((a, b) => b - a);
@@ -260,7 +268,7 @@ function getTrafficInflow(divisor)
         }
         if(i>1)
           subs -= getCommonMultipleArray(divisor,i);
-        console.log("subs-"+i+"-"+subs);
+        // console.log("subs-"+i+"-"+subs);
         // inflow.push(subs_from - subs);
         // if((subs_from - subs) < 0)
         // {
@@ -278,8 +286,7 @@ function getTrafficInflow(divisor)
     inflow[divisor[0]] = getCommonMultiple(divisor[0],false);
   }else{
     inflow[divisor[0]] = 100;
-  }
-  
+  } 
   
   // console.log(inflow);
   return inflow;
@@ -287,8 +294,7 @@ function getTrafficInflow(divisor)
 function getCommonMultipleArray(divisor,k) {
   var z=100;
   var count = 0;
-  while(z>1) {
-    
+  while(z>1) {    
     var cond ="";
     for(var i=0;i<=k;i++)
     {
@@ -297,13 +303,11 @@ function getCommonMultipleArray(divisor,k) {
         cond += " && ";
       }
       cond += z+" % "+divisor[i] + " ==0";
-    }
-    
+    }    
     if(eval(cond)){
-      console.log("cond-"+cond);
+      // console.log("cond-"+cond);
       count++;
-    }
-        
+    }        
     z--;
   }
   return count;
@@ -319,8 +323,7 @@ function getCommonMultiple(num1,num2) {
    }else{
     if(z % num1 == 0)
     count++;
-   }
-    
+   }    
     z--;
   }
   return count;
