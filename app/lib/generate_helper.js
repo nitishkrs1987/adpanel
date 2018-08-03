@@ -82,7 +82,7 @@ class generate_helper{
           if(advertisor[i].is_bounce_req == 1)
           {
             generate += "var bnc = Math.floor(Date.now() / 1000);";
-            generate += "if (bnc % 2 == 0){";
+            generate += "if (bnc % 4 == 0){";
             generate += "setTimeout(function(){var zl = document.getElementById('"+advertisor[i].bounce_frame_id+"').contentWindow.document;zl.open();zl.write(\"<iframe src='"+advertisor[i].bounce_url+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\");zl.close();}, 8000);";
             generate += "}";
           }
