@@ -13,6 +13,7 @@ exports.index = function (req,res) {
     });
   } 
 }
+/*********** Insert Affiliates after deleting existing ones **********/
 exports.save = function (req,res) {
   // console.log(req.body.multi_choice_prod);
   if(typeof(req.body.adv_id) != "undefined" && typeof(req.body.links) != "undefined" )

