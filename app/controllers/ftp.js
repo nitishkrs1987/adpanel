@@ -8,11 +8,12 @@ exports.ftp_upload_file = function(req,res){
     // console.log(req.params.campaign_id);
     pool.query("select * from campaign where id="+req.params.campaign_id,function(err,rows){
         if(!err) {
+            var c = new Client();
             files_in_output(directory,function(files){
                 files = JSON.parse(files);
                 // console.log("files-"+files);
                 // console.log("flength-"+files.length);
-                var c = new Client();
+               
                 var file_count=1;
                 files.forEach(function(file){               
                     c.on('ready', function() {
@@ -22,8 +23,18 @@ exports.ftp_upload_file = function(req,res){
                         // console.log("file_count-"+file_count);                        
                         try{
                             c.put(file, rows[0].directory+'/'+upload_file_name, function(err) {
-                                if (err) throw err;
-                                purge_url = rows[0].live_url+"/test_api/"+upload_file_name;
+                                if (err) 
+                                {
+                                    req.flash('error', 'Failed to upload. Error-'+err);
+                                    res.redirect('/campaign');  
+                                }
+                                // console.log(file);
+                                up_fname = file.split("/");
+                                if(process.env.NODE_ENV == "development")
+                                    purge_url = rows[0].live_url+"/test_api/"+up_fname[1];
+                                else
+                                    purge_url = rows[0].live_url+"/api/"+upload_file_name;
+                                // console.log(purge_url);
                                 purgeFiles(purge_url,rows[0].zone_id,function(r){
                                     if(r == 2)
                                     {
@@ -36,10 +47,10 @@ exports.ftp_upload_file = function(req,res){
                                     }
                                     file_count++;
                                 });
-                                c.end();
+                                
                             });
                         }catch(error){
-                            console.log(error.code);
+                            // console.log(error.code);
                             req.flash('error', 'Failed to upload. Error-'+error.code);
                             res.redirect('/campaign');  
                         }
@@ -57,7 +68,7 @@ exports.ftp_upload_file = function(req,res){
                     req.flash('error', 'Failed to Connect. Error-');
                     res.redirect('/campaign');  
                 }
-            });
+            });c.end();
         }
     });
     

