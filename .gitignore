@@ -2,6 +2,7 @@
 .htaccess
 robots.txt
 output
+db
 .DS_Store
 app/.DS_Store
 views/.DS_Store
