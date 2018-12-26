@@ -112,38 +112,32 @@ jQuery(document).ready(function(){
     });
     jQuery('body').on("change","#is_bounce_req",function(){
       var $option = $(this).find('option:selected');
-      //  alert($option.val());
       if($option.val() == 1)
       {
         $(".bnc_hide").parent().show();
-        // $(".bnc_hide").addAttr("required");
       }else{
         $(".bnc_hide").parent().hide();
-        // $(".bnc_hide").removeAttr("required");
       }
     });
     jQuery('body').on("change","#adv_country",function(){
       var $country = $(this).find('option:selected');
-      // alert($country.val());
       $("div#advertisor select#advertisor_select_by_country option").each(function(){
-        if($(this).attr("rel") != $country.val() && $(this).val()!=""){
-            $(this).attr("disabled","disabled");
+        if($(this).attr("rel") != $country.val() && $(this).val()!="" && $country.val() != ""){
+            $(this).hide();
         }else{
-          $(this).removeAttr("disabled");
+          $(this).show();
         }
       });
     });
     /***************** Campaign ************************/
     jQuery(".edit_campaign").click(function(){
       jQuery.get("/campaign/edit/"+$(this).attr("id"),function(resp){
-        // console.log(resp);
         jQuery("#campaign_detail").html(resp);
       });
     });
 
     jQuery(".add_campaign").click(function(){
       jQuery.get("/campaign/add",function(resp){
-        // console.log(resp);
         jQuery("#campaign_detail").html(resp);
       });
     });
