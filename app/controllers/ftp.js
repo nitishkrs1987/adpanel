@@ -1,121 +1,119 @@
 var Client = require('ftp');
-var fs = require('fs');
+// var PromiseFtp = require('promise-ftp');
+var promisify = require('promisify-node'),
+    PromiseFtp = require('promise-ftp'),
+    fs = promisify('fs');
+// var fs = require('fs');
 const directory = 'output';
 const path = require('path');
+const moment = require('moment');
 const pool = require('../lib/mysql_conn.js');
 
+var _ftp = new PromiseFtp();
+
 exports.ftp_upload_file = function(req,res){
-    // console.log(req.params.campaign_id);
     pool.query("select * from campaign where id="+req.params.campaign_id,function(err,rows){
-        if(!err) {
-            var c = new Client();
-            files_in_output(directory,function(files){
-                files = JSON.parse(files);
-                // console.log("files-"+files);
-                // console.log("flength-"+files.length);
-               
-                var file_count=1;
-                files.forEach(function(file){               
-                    c.on('ready', function() {
-                        upload_file_name = file.split("/");
-                        upload_file_name = upload_file_name[(upload_file_name.length -1 )];
-                        // console.log("upload_file_name-"+upload_file_name);  
-                        // console.log("file_count-"+file_count);                        
-                        try{
-                            c.put(file, rows[0].directory+'/'+upload_file_name, function(err) {
-                                if (err) 
-                                {
-                                    req.flash('error', 'Failed to upload. Error-'+err);
-                                    res.redirect('/campaign');  
-                                }
-                                // console.log(file);
-                                up_fname = file.split("/");
-                                if(process.env.NODE_ENV == "development")
-                                    purge_url = rows[0].live_url+"/test_api/"+up_fname[1];
-                                else
-                                    purge_url = rows[0].live_url+"/api/"+upload_file_name;
-                                // console.log(purge_url);
-                                purgeFiles(purge_url,rows[0].zone_id,function(r){
-                                    if(r == 2)
-                                    {
-                                        req.flash('error', 'Uploaded but Failed to Purge.');
-                                        res.redirect('/campaign');
-                                    }
-                                    else if(r == 1 && file_count == files.length){
-                                        req.flash('success', 'Uploaded & Purged Successfully');
-                                        res.redirect('/campaign');
-                                    }
-                                    file_count++;
-                                });
-                                
-                            });
-                        }catch(error){
-                            // console.log(error.code);
-                            req.flash('error', 'Failed to upload. Error-'+error.code);
-                            res.redirect('/campaign');  
-                        }
-                    });
-                     
-                });
-                try{
-                    c.connect({
-                        host : rows[0].host,
-                        user : rows[0].username,
-                        password : rows[0].password
-                    });
-                }catch(error){
-                    console.log(error);
-                    req.flash('error', 'Failed to Connect. Error-');
-                    res.redirect('/campaign');  
-                }
-            });c.end();
-        }
-    });
-    
-}
-
-
-function purgeFiles(url,zone_id,callback)
-{
-    var cf = require('cloudflare')({
-        email: process.env.CF_EMAIL,
-        key: process.env.CF_KEY
-    });
-    cf.zones.purgeCache(zone_id, { "files": [url] }).then(function (resp) {
-        // console.log(resp);
-        if(resp.success){
-            callback(1);
-        }else{
-            callback(2);
-        }
-    });
-    // cf.zones.read("bbeffbbf5f479a90b0c3a545eea1eaee").then(function (resp) {
-    //     console.log(resp.result.status);
-    //   });
-}
-function files_in_output(directory,callback)
-{
-    var filename = [];
-    // return new Promise(function (fulfill, reject){
-      fs.readdir(directory, (err, files) => {
-        if (!err){
-            filecount=1;
-            for (const file of files) {
-                if(file != ".DS_Store")
-                {
-                    var stats = fs.statSync(path.join(directory, file));
-                    if(stats.isFile())
-                    {
-                        filename.push(directory+"/"+file);
-                    }
-                    if(filecount == files.length)
-                    {
-                        callback(JSON.stringify(filename));
-                    }
-                }
-                filecount++;
+     if(!err) {     
+            
+        publish(directory).done(function(files){
+            // console.log(files);
+            if(_ftp.getConnectionStatus() == "connected" || _ftp.getConnectionStatus() == "connecting")
+            {
+                _ftp.end();
             }
-        }
-    });        
-    // });
+            _ftp.connect({host: rows[0].host, user: rows[0].username, password: rows[0].password})
+            .then(() => multiRenameFiles(files,rows[0].directory))
+            .then(() => multiPutFiles(files,rows[0].directory))
+            .then(() => purgeFile(rows[0].live_url,files,rows[0].zone_id))
+            .then(function () {
+                // console.log('disconnecting...')
+                _ftp.end();     
+                req.flash('success', 'Uploaded & Purged Successfully');
+                res.redirect('/campaign');           
+            }).catch((err)=>{
+                req.flash('error', 'Uploaded but Failed to Purge. Due to '+err);
+                res.redirect('/campaign');
+            });
+        
+           
+        });
+        
+     }
+    });
+
+};
+function purgeFile(live_url,fileList,zone_id)
+{
+    return new Promise(function(resolve, reject){
+        var cf = require('cloudflare')({
+            email: process.env.CF_EMAIL,
+            key: process.env.CF_KEY
+        });
+
+
+        var purge_urls = [];
+        fileList.forEach(function(file){        
+            // console.log('Purging:', live_url +"/api/"+ file);
+            if(process.env.NODE_ENV == "development")
+                purge_urls.push(live_url+"/test_api/"+file);
+            else
+                purge_urls.push(live_url+"/api/"+file);
+        });
+            
+        // console.log(purge_urls);
+        cf.zones.purgeCache(zone_id, { "files": purge_urls }).then(function(resp){
+            // console.log(resp);
+            if(resp.success){
+                resolve();
+            }else{
+                // throw new Error("Purge Error");
+                reject(resp);
+            }
+        }).catch((err) => {
+            console.log(err.toString());
+            reject();
+          });
+    });
 }
+function multiPutFiles(fileList,_remoteFilePath){
+    return new Promise(function(resolve, reject){
+      var chain = Promise.resolve();
+  
+      fileList.forEach(function(file, i, arr){
+        chain = chain.then(() => {
+        //   console.log('uploading:', directory +"/"+ file);
+          return _ftp.put(directory +"/"+ file, _remoteFilePath +"/"+ file);
+        })
+        // file upload errors
+        .catch((err) => { console.log(err.toString()); _ftp.end(); })
+  
+        if(i === arr.length - 1)
+          chain.then(() => resolve())
+      })
+    })
+  }
+function multiRenameFiles(fileList,_remoteFilePath){
+    return new Promise(function(resolve, reject){
+      var chain = Promise.resolve();
+  
+      fileList.forEach(function(file, i, arr){
+        chain = chain.then(() => {
+        //   console.log('Renaming:', _remoteFilePath +"/"+ file);
+          return _ftp.rename(_remoteFilePath +"/"+ file, _remoteFilePath +"/back/"+ new moment().format('YYYY_MM_DD_HH_mm')+"_" + file);
+        })
+        // file upload errors
+        .catch((err) => { console.log(err.toString()); _ftp.end(); })
+  
+        if(i === arr.length - 1)
+          chain.then(() => resolve())
+      })
+    })
+  }
+
+publish = function(directory){
+    return fs.readdir(directory)
+      .then(function(files){
+        var pattern = new RegExp('.js')
+        return files.filter((file) => pattern.test(file))
+      })
+  }
