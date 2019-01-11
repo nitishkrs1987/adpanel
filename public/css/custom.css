@@ -4,7 +4,10 @@
 .show{
     display:block;
 }
-
+.need_change{border-color: aqua;
+    background-color: cadetblue;
+    color: cornsilk;
+}
 .progress{height: .65rem;font-size:.55rem}
 /* .aff_traffic_inflow{color:#1f1fd0} */
 .no{color:#dc3545}

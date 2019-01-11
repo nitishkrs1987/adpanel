@@ -177,12 +177,26 @@ jQuery(document).ready(function(){
     /************** Affiliate ************************/
     jQuery('body').on("click","#add_link",function(){
       var newrow = jQuery(this).prev().clone();
-      newrow.find("input").attr("id",(parseInt(newrow.find("input").attr("id"))+1));
+      var old_id= (parseInt(newrow.find("input[type='url']").attr("id")));
+      var new_id= (parseInt(newrow.find("input[type='url']").attr("id")) +1);
+      newrow.find("input[type='url']").attr("id",new_id);
+      newrow.find("input[type='checkbox']").attr("name","redir_check_req_"+new_id);
+      newrow.find("input#redir_check_val_"+old_id).attr("id","redir_check_val_"+new_id);
       newrow.find("input[type='text']").attr("value","");
       newrow.find("input[type='number']").attr("value","1");
       // alert(newrow.find("input").attr("id"));
       jQuery(this).prev().after(newrow);
       return false;
+    });
+    jQuery('body').on("click","input.redir_req_check",function(){
+      var name = $(this).attr("name").replace("_req_","_val_");
+      // console.log(name);
+      if($(this).is(':checked'))
+      {        
+        $("#"+name).val(1);
+      }else{
+        $("#"+name).val(0);
+      }
     });
     jQuery('body').on("click",".remove_this",function(){
       // var remove_link = jQuery(this);

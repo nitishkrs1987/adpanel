@@ -1,89 +1,42 @@
 <form action="/affiliate/save" method="post">
   <!-- <div class="form-group">     -->         
-      <% if(affiliate.length > 0) { %>        
-        <% var multi_choice_prod_flag = false;
-          if(adv_type == 3)
-          {
-            for(var i=0; i<affiliate.length; i++) { 
-              if(affiliate[i].link == "multi_choice_prod")
-              {
-                multi_choice_prod_flag = true;
-                break;
-              }                
-            } 
-           
-            if(multi_choice_prod_flag == false){
-              %>
-              <div class="row">  
-                <div class="col-xl-10">
-                    <label for="link1 mb3">Links</label>
-                    <div class="input-group mt15">
-                     <input type="text" name="multi_choice_prod" autocomplete="off" class="form-control" value="Multichoice product" readonly>
-                    </div>
-                </div>
-                  
-                <div class="col-xl-2">
-                  <label for="link1">Divisor</label>
-                    <div class="input-group mt15">              
-                      <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="1">
-                      
-                    </div>
-                </div>  
-                  <div class="col-xl-12">
-                    <div class="progress">
-                      <div class="progress-bar aff_traffic_inflow" role="progressbar" id="inflow_1" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                  </div>
-              </div> 
-            <%}
-          }
-          %>
+    <% if(affiliate.length > 0) { %>       <!-- If Affiliates present-->
         <% for(var i=0; i<affiliate.length; i++) { 
-          var base_url = affiliate[i].link.split("?url=");
+          if(affiliate[i].redir_req == 1)
+            var base_url = affiliate[i].link.split("?url=");
+          else
+            var base_url = ""
           %>
-
           <div class="row">  
             <div class="col-xl-10">
-              <% if(i == 0 && multi_choice_prod_flag){ %>
+              <% if(i == 0 ){ %>
                 <label for="link1 mb3">Links</label>
               <% } %>
               <div class="input-group mt15">
-                <% if(affiliate[i].link == "multi_choice_prod"){ %>                
-                          <input type="text" name="multi_choice_prod" autocomplete="off" class="form-control" value="Multichoice product" readonly>
-                          
-                        </div>
-                      </div>
-                      
-                      <div class="col-xl-2">
-                          <% if(i == 0 && multi_choice_prod_flag){ %>
-                            <label for="link1">Divisor</label>
-                          <% } %>
-                          <div class="input-group mt15">              
-                            <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>">
-                            
-                          </div>
-                      </div>  
-                      <div class="col-xl-12">
-                        <div class="progress">
-                          <div class="progress-bar aff_traffic_inflow" role="progressbar" id="inflow_<%=  affiliate[i].divisor %>" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                        </div>
-                      </div>
-                    </div> 
-              <% }else if(affiliate[i].affiliate_type == 0){ %>
+              
+              <% if(affiliate[i].affiliate_type == 0){ %>
+                <% if(affiliate[i].redir_req == 1){ %>
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
-                    <!-- <span class="input-group-text" id="basic-addon3"><%= base_url[0] %>?url=</span> -->
+                    <!-- <span class="input-group-text" id="basic-addon3"><%= redir_url %></span> -->
+                    <span class="input-group-text<% if(redir_url != base_url[0]+"?url="){  %> need_change<%}%>" id="basic-addon3"><%= base_url[0] %>?url=</span>
                   </div>
-                <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link-old" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
+                  <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link-old" id="<%= affiliate[i].affiliate_id %>" value="<%= decodeURIComponent(base_url[1]) %>">
+                <% }else{ %>
+                  <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link-old" id="<%= affiliate[i].affiliate_id %>" value="<%= affiliate[i].link %>">
+                <% } %>
               </div>          
             </div>
               <div class="col-xl-2">
-                  <% if(i == 0 && multi_choice_prod_flag){ %>
+                  <% if(i == 0 ){ %>
                     <label for="link1">Divisor</label>
                   <% } %>
                   <div class="input-group mt15">              
                     <input type="number" name="divisor[]" class="form-control aff_divisor" value="<%=  affiliate[i].divisor %>" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
-                    <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>                  
+                    <span class="btn btn-info remove_link" rel="<%= affiliate[i].affiliate_id %>" ><i class="fas fa-trash-alt"></i></span>
+                    <div class="input-group-text">
+                      <input type="checkbox" class="btn btn-info redir_req_check" name="redir_check_req_<%= affiliate[i].affiliate_id %>" value="1" <% if(affiliate[i].redir_req == 1){ %>checked <%} %>>
+                      <input type="hidden" name="redir_req[]" id="redir_check_val_<%= affiliate[i].affiliate_id %>" value="<%= affiliate[i].redir_req %>">
+                    </div>
                   </div>
               </div>
               <% if(is_divisor_needed == 1 || adv_type != 2) {%>
@@ -97,33 +50,8 @@
           </div>
           <% } %>
         <% } %> <!-- Closing of for loop -->
-      <% }else{ %>  <!-- If there isn't any affiliate entry -->
-        <% if(adv_type == 3){  %>   <!-- Multichoice product section -->
-          <div class="row">  
-            <div class="col-xl-10">
-              <label for="link1 mb3">Links</label>
-              <div class="input-group mb-3">
-                <!-- <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon3"><%= redir_url %></span>
-                </div> -->
-                <input type="text" name="multi_choice_prod" autocomplete="off" class="form-control" value="Multichoice product" readonly>
-              </div>
-            </div>
-            <div class="col-xl-2">
-                <label for="link1 mb3">Divisor</label>
-                <div class="input-group">              
-                  <input type="number" name="multi_choice_prod_divisor" class="form-control aff_divisor" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
-                </div>
-            </div>  
-          </div> 
-          <% if(is_divisor_needed == 1 || adv_type != 2) {%>
-          <div class="col-xl-12">
-            <div class="progress">
-              <div class="progress-bar aff_traffic_inflow" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-            </div>
-          </div>
-        <% } %>
-        <% } %>
+<% }else{ %>  <!-- If there isn't any affiliate entry -->
+        
         <div class="row">  
           <div class="col-xl-10">
             <label for="link1 mb3">Links</label>
@@ -139,6 +67,7 @@
               <div class="input-group">              
                 <input type="number" name="divisor[]" class="form-control" value="1" <% if(is_divisor_needed == 0 || adv_type==2) {%> readonly <% } %>>
                 <span class="btn btn-info remove_this" rel="" ><i class="fas fa-trash-alt"></i></span>
+                <input type="hidden" name="redir_req[]"  value="1">
               </div>
           </div>  
           <% if(is_divisor_needed == 1 || adv_type != 2) {%>
@@ -155,6 +84,8 @@
       <% if(is_divisor_needed == 1 || adv_type==2) {%>
         <button class="btn btn-info mt15" id="add_link"><i class="fas fa-plus"></i></button>
       <% } %>
+      
+
       <input type="hidden" name="adv_type" value="<%= adv_type %>">
       <input type="hidden" name="adv_id" value="<%= adv_id %>">
       <input type="hidden" name="redir_url" value="<%= redir_url %>">

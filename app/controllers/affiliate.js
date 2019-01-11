@@ -15,22 +15,26 @@ exports.index = function (req,res) {
 }
 /*********** Insert Affiliates after deleting existing ones **********/
 exports.save = function (req,res) {
-  // console.log(req.body.multi_choice_prod);
-  if(typeof(req.body.adv_id) != "undefined" && typeof(req.body.links) != "undefined" )
+  // console.log(req.body.redir_req);
+  if(typeof(req.body.adv_id) != "undefined" && typeof(req.body.links) != "undefined")
   {
       var insert_sql = "";
       var check_dup_divisor = [];
-      if(typeof(req.body.multi_choice_prod) != "undefined")
-      {
-        insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type) values("+req.body.adv_id+",'multi_choice_prod',"+req.body.multi_choice_prod_divisor+",0 );";
-        check_dup_divisor.push(parseInt(req.body.multi_choice_prod_divisor));
-      }
+      // if(typeof(req.body.multi_choice_prod) != "undefined")
+      // {
+      //   insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type) values("+req.body.adv_id+",'multi_choice_prod',"+req.body.multi_choice_prod_divisor+",0 );";
+      //   check_dup_divisor.push(parseInt(req.body.multi_choice_prod_divisor));
+      // }
       for(var i=0;i<req.body.links.length;i++)
       { 
         if(req.body.links[i] != "")
         {
-          var link = req.body.redir_url+encodeURIComponent(req.body.links[i]);
-          insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type) values("+req.body.adv_id+",'"+ link +"',"+req.body.divisor[i]+",0 );";
+          if( req.body.redir_req[i] == 1)
+            var link = req.body.redir_url+encodeURIComponent(req.body.links[i]);
+          else
+            var link = req.body.links[i];
+
+          insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type,redir_req) values("+req.body.adv_id+",'"+ link +"',"+req.body.divisor[i]+",0 ,"+ req.body.redir_req[i] +");";
           if(req.body.adv_type !=2)
           {
             check_dup_divisor.push(parseInt(req.body.divisor[i]));  
@@ -53,7 +57,7 @@ exports.save = function (req,res) {
                   req.flash('success', 'Updated Successfully.');
                   res.redirect('/advertisor/'+req.body.campaign_id);
                 }else{
-                  console.log(err);
+                  // console.log(err);
                   req.flash('error', err.code);
                   res.redirect('/advertisor/'+req.body.campaign_id);
                 }
