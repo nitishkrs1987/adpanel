@@ -99,10 +99,11 @@ function multiRenameFiles(fileList,_remoteFilePath){
       fileList.forEach(function(file, i, arr){
         chain = chain.then(() => {
         //   console.log('Renaming:', _remoteFilePath +"/"+ file);
+        //   var size = _ftp.size(_remoteFilePath +"/"+ file);
+        //   console.log('Size:',size);
           return _ftp.rename(_remoteFilePath +"/"+ file, _remoteFilePath +"/back/"+ new moment().format('YYYY_MM_DD_HH_mm')+"_" + file);
         })
-        // file upload errors
-        .catch((err) => { console.log(err.toString()); _ftp.end(); })
+        .catch((err) => { console.log(err.toString()); })
   
         if(i === arr.length - 1)
           chain.then(() => resolve())
