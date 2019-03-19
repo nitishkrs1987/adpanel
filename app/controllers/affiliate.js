@@ -34,7 +34,7 @@ exports.save = function (req,res) {
           else
             var link = req.body.links[i];
 
-          insert_sql += "insert into affiliate (adv_id,link,divisor,affiliate_type,redir_req) values("+req.body.adv_id+",'"+ link +"',"+req.body.divisor[i]+",0 ,"+ req.body.redir_req[i] +");";
+          insert_sql += "insert into affiliate (adv_id,link,name,divisor,affiliate_type,redir_req) values("+req.body.adv_id+",'"+ link +"','"+ req.body.name[i]+"', "+req.body.divisor[i]+",0 ,"+ req.body.redir_req[i] +");";
           if(req.body.adv_type !=2)
           {
             check_dup_divisor.push(parseInt(req.body.divisor[i]));  
