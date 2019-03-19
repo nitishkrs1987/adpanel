@@ -8,7 +8,7 @@
             var base_url = ""
           %>
           <div class="row">  
-            <div class="col-xl-10">
+            <div class="col-xl-8">
               <% if(i == 0 ){ %>
                 <label for="link1 mb3">Links</label>
               <% } %>
@@ -24,8 +24,17 @@
                 <% }else{ %>
                   <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link-old" id="<%= affiliate[i].affiliate_id %>" value="<%= affiliate[i].link %>">
                 <% } %>
+                
               </div>          
             </div>
+              <div class="col-xl-2">
+                  <% if(i == 0 ){ %>
+                    <label for="link1">Name</label>
+                  <% } %>
+                  <div class="input-group mt15">              
+                    <input type="text" name="name[]" class="form-control" value="<%=  affiliate[i].name %>" >                 
+                  </div>
+              </div>
               <div class="col-xl-2">
                   <% if(i == 0 ){ %>
                     <label for="link1">Divisor</label>
@@ -53,7 +62,7 @@
 <% }else{ %>  <!-- If there isn't any affiliate entry -->
         
         <div class="row">  
-          <div class="col-xl-10">
+          <div class="col-xl-8">
             <label for="link1 mb3">Links</label>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -62,6 +71,12 @@
               <input type="url" name="links[]" autocomplete="off" required aria-describedby="basic-addon3" class="form-control link_new" value="">
             </div>
           </div>
+          <div class="col-xl-2">
+            <label for="link1 mb3">Name</label>
+            <div class="input-group">       
+              <input type="text" name="name[]" class="form-control" value="" >                 
+            </div>
+        </div>
           <div class="col-xl-2">
               <label for="link1 mb3">Divisor</label>
               <div class="input-group">              
